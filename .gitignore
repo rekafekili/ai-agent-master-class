@@ -1,0 +1,22 @@
+# Python
+__pycache__
+*.pyc
+*.pyd
+*.so
+
+# Environments
+.venv
+venv
+env
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# uv specific (optional, as it's meant to be committed)
+# uv.lock 
+
+# Other commonly ignored files
+.env
+.idea/
