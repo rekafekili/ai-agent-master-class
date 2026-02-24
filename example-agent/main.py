@@ -1,6 +1,3 @@
-import firecrawl
-
-
 def main():
     print("Hello from example-agent!")
 
