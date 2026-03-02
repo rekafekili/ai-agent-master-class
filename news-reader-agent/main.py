@@ -4,18 +4,29 @@ dotenv.load_dotenv()
 
 from crewai import Crew, Agent, Task
 from crewai.project import CrewBase, agent, task, crew
-from tools import count_letters
+from tools import search_tool, scrape_tool
 
 
 @CrewBase
 class NewsReaderCrew:
     @agent
     def news_hunter_agent(self):
-        return Agent(config=self.agents_config["news_hunter_agent"])
+        return Agent(
+            config=self.agents_config["news_hunter_agent"],
+            tools=[
+                search_tool,
+                scrape_tool,
+            ],
+        )
 
     @agent
     def summarizer_agent(self):
-        return Agent(config=self.agents_config["summarizer_agent"])
+        return Agent(
+            config=self.agents_config["summarizer_agent"],
+            tools=[
+                scrape_tool,
+            ],
+        )
 
     @agent
     def curator_agent(self):
@@ -38,4 +49,8 @@ class NewsReaderCrew:
         return Crew(agents=self.agents, tasks=self.tasks, verbose=True)
 
 
-NewsReaderCrew().crew().kickoff()
+NewsReaderCrew().crew().kickoff(
+    inputs={
+        "topic": "USA attack Iran",
+    },
+)
