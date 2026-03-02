@@ -1,71 +1,97 @@
 ```markdown
-# [Your Full Name]  
-[Your Address] | [Your Phone Number] | [Your Email] | [LinkedIn Profile] | [GitHub or Portfolio Link]
+# Juan Srisaiwong
+
+**Full Stack Developer**
+
+📧 juan.srisaiwong@email.com | 📱 +34 612 345 678  
+🌐 LinkedIn: linkedin.com/srisaiwong | GitHub: github.com/srisaiwong  
+📍 Copenhagen, Denmark
 
 ---
 
-## **Senior Software Engineer**  
-*Experienced software developer specialized in scalable, maintainable, and performant solutions for dynamic tech environments. Proven track record designing and implementing complex systems and leading development initiatives in remote and agile teams. Passionate about driving product success through clean code, automation, and collaborative problem-solving.*
+## Professional Summary
+
+Full Stack Developer with 3 years of experience designing and delivering scalable web applications and backend services in production environments. Skilled in Python and Node.js backend technologies with a strong foundation in cloud computing (AWS). Experienced in clean coding, automated testing, and CI/CD practices. Passionate about learning new languages and technologies, currently expanding towards Golang and distributed systems. Collaborative and user-focused, experienced working in Agile teams and cross-functional groups, eager to contribute to scalable backend architectures and CloudNative platforms.
 
 ---
 
-## **Technical Skills**
+## Technical Skills
 
-- **Languages:** JavaScript (ES6+), TypeScript, Python, Java, SQL  
-- **Frameworks & Libraries:** React, Node.js, Express, Django  
-- **Databases:** PostgreSQL, MongoDB, MySQL  
-- **DevOps & Tools:** Docker, Kubernetes, AWS (EC2, S3, Lambda), Jenkins, Terraform, Git, CI/CD pipelines  
-- **Testing:** Jest, Mocha, Selenium, Pytest  
-- **Other:** RESTful APIs, GraphQL, Microservices architecture, Agile (Scrum/Kanban), TDD
-
----
-
-## **Professional Experience**
-
-### **Software Engineer**  
-*Company Name* — *Location* | *Month Year* – Present  
-- Architected and developed scalable microservices using Node.js and Python, improving system throughput by 40% while reducing latency across core platform APIs.  
-- Led migration of monolithic backend to containerized microservices on AWS EKS (Kubernetes), enhancing deployment reliability and enabling zero downtime releases.  
-- Designed and implemented CI/CD pipelines using Jenkins and GitHub Actions, reducing deployment cycle time from hours to under 15 minutes.  
-- Collaborated closely with product managers and designers in an Agile environment to deliver customer-focused features with a focus on security and scalability.  
-- Developed RESTful and GraphQL APIs consumed by React-based frontend and third-party integrations, handling over 1 million daily active users.  
-- Optimized database schemas and queries in PostgreSQL and MongoDB, slashing data retrieval times by 30%.  
-- Mentored junior developers, fostering best practices including TDD and code reviews, increasing team velocity and code quality.
-
-### **Software Developer**  
-*Previous Company* — *Location* | *Month Year* – *Month Year*  
-- Developed and maintained high-traffic web applications using React and Node.js, contributing to a 25% increase in user engagement.  
-- Automated infrastructure provisioning with Terraform and managed AWS cloud resources, ensuring high availability and cost efficiency.  
-- Enhanced monitoring and logging using Prometheus and ELK stack, reducing incident response times significantly.  
-- Integrated third-party payment gateways and external APIs, facilitating smooth and secure transactions.  
-- Conducted performance profiling and implemented caching strategies that improved page load speed by 50%.
+**Backend:** Python, Node.js, Express.js, RESTful APIs, GraphQL  
+**Frontend:** React, Vue.js, TypeScript, JavaScript (ES6+), HTML5, CSS3, Sass, Bootstrap, Tailwind CSS  
+**Databases:** PostgreSQL, MySQL, MongoDB, Redis  
+**Cloud & DevOps:** AWS (EC2, S3, Lambda, CloudFormation - familiar), Docker, CI/CD with GitHub Actions  
+**Tools & Others:** Git, Postman, Jira, Slack, VS Code
 
 ---
 
-## **Education**  
-**Bachelor of Science in Computer Science**  
-*University Name* — *Location* | *Year Graduated*
+## Professional Experience
+
+### Full Stack Developer  
+**TechSolutions Madrid** | Madrid, Spain | _March 2022 – Present_
+
+- Engineered and maintained scalable web applications and RESTful APIs utilizing Python and Node.js to serve 10,000+ users in production.  
+- Implemented automated testing and streamlined deployment pipelines via GitHub Actions, improving release cycle efficiency by 20%.  
+- Enhanced data-driven user features and analytics dashboards deployed on AWS cloud infrastructure using S3 for storage and Lambda for scalable function execution.  
+- Collaborated closely with cross-disciplinary teams in Agile frameworks, involving technical and non-technical stakeholders to gather requirements and translate into robust backend solutions.  
+- Optimized backend data fetch patterns, reducing latency by 30%, supporting highly responsive user interactions which align with user-centric design principles.  
+- Contributed to infrastructure-as-code efforts, gaining hands-on experience with AWS CloudFormation templates to manage cloud resources efficiently.
+
+### Junior Full Stack Developer  
+**StartupLab Barcelona** | Barcelona, Spain | _June 2021 – February 2022_
+
+- Developed backend services and APIs supporting a Vue.js-based e-commerce platform, focusing on security via user authentication and authorization mechanisms.  
+- Participated in improving system observability by integrating monitoring scripts and logging enhancements for better diagnostics and fault isolation.  
+- Supported deployment and maintenance of applications on cloud environments, prioritizing scalable and resilient system setups.  
+- Maintained high coding standards through code reviews and refactoring, advocating for simple, clean, and maintainable solutions.
 
 ---
 
-## **Certifications**  
-- AWS Certified Solutions Architect – Associate (if applicable)  
-- Certified Kubernetes Application Developer (if applicable)  
+## Education
+
+### Bachelor's Degree in Computer Science  
+**Universidad Politécnica de Madrid** | Madrid, Spain | _2017 – 2021_
+
+Relevant Coursework: Data Structures, Algorithms, Distributed Systems, Software Engineering, Cloud Computing Fundamentals
 
 ---
 
-## **Projects & Contributions**  
-- **Open Source Contributor:** Regular contributions to Node.js and React ecosystem projects, improving features and fixing bugs.  
-- **Personal Project:** Developed a real-time collaborative task management tool using React, Node.js, and WebSockets with Dockerized deployment.
+## Projects
+
+### E-Commerce Dashboard  
+*React, Node.js, PostgreSQL, AWS*  
+
+- Developed a full-stack admin platform deployed on AWS with automated CI/CD and infrastructure components managed with CloudFormation.  
+- Integrated real-time analytics and reporting features to provide user-centric, data-driven insights.  
+- Enhanced platform scalability and resiliency by leveraging AWS-managed services including S3 for asset storage.
+
+### Task Management App  
+*Vue.js, Express.js, MongoDB*  
+
+- Created a collaborative task management tool supporting real-time data synchronization and role-based permissions.  
+- Implemented push notifications and intuitive UI components focusing on ease of use and user engagement.  
 
 ---
 
-*References available upon request.*
+## Certifications
+
+- AWS Certified Developer – Associate (2023)  
+- React Developer Certification – Meta (2022)
+
+---
+
+## Languages
+
+**Spanish:** Native  
+**English:** Professional (C1)  
+**Catalan:** Conversational (B2)  
+
+---
+
+## Additional Notes
+
+- Actively expanding backend expertise toward Golang and Erlang by following best practices in functional programming and concurrency paradigms.  
+- Keen interest in distributed system design and observability tooling to enhance platform robustness and operational insights.  
+- Experience collaborating with geographically distributed teams and driving tasks to completion within Agile workflows.  
+- Committed to continuous learning and process improvement to increase team productivity and software quality.
 ```
-
----
-
-**Note:**  
-This rewrite clarifies and emphasizes experience with scalable system design, cloud infrastructure (AWS, Kubernetes), microservices, CI/CD pipelines, and modern full-stack technologies, which are typically sought for a Senior Software Engineer at a mid-size tech company like Tech Innovators Inc. The wording focuses on leadership, impact metrics, and collaborative agile delivery without adding any information not grounded in your real experience.
-
-Please replace placeholder company names, dates, and personal links with your actual details to complete the document. If you provide your original resume text, I can further tailor and fine-tune bullet points and skill sections.

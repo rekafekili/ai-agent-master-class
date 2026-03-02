@@ -1,98 +1,111 @@
 ```markdown
 # Company Overview
 
-**Tech Innovators Inc.** is a mid-sized technology company specializing in developing scalable software solutions and cutting-edge technology products. Founded approximately a decade ago, it has grown to a few hundred employees and operates primarily in the software development and SaaS space, serving clients globally. Their culture strongly supports remote work and agile methodologies, leveraging modern cloud infrastructure (notably AWS) and microservices architectures to deliver robust and performant products.
+**Happening** is one of the largest sports betting operators in the region, managing an extensive network of over 1000 betting locations across multiple geographies. The company’s platform supports extremely high transaction volumes, reportedly handling over 22 million bets per month. Headquartered in Amsterdam, North Holland, Netherlands, Happening leverages modern cloud-native technologies and distributed systems to maintain scale, resiliency, and real-time performance requirements essential to sports betting operations.
+
+While exact employee count and revenue figures are not explicitly stated in public sources, Happening represents a mature technology-driven operator in the sports betting industry focusing heavily on backend engineering, platform automation, and observability.
+
+Happening’s technology stack prominently features Golang, Python, Erlang, Kafka, and AWS cloud infrastructure, indicating an emphasis on scalable, distributed systems and event-driven architecture.
 
 ---
 
 # Mission and Values
 
-- **Mission:** To empower businesses and users through innovative, reliable, and scalable technology solutions that enable seamless digital transformation.
-- **Core Values:**
-  - *Innovation:* Encouraging creativity and continuous improvement in product development.
-  - *Customer-Centricity:* Delivering value by deeply understanding and addressing customer needs.
-  - *Collaboration:* Promoting open communication and teamwork across distributed teams.
-  - *Integrity:* Maintaining transparency, trust, and accountability in all interactions.
-  - *Excellence:* Striving for technical and operational excellence with high-quality deliverables.
+Happening's mission centers around **delivering a seamless, robust sports betting experience** that operates efficiently at massive scale. It aims to empower betting through technology by:
+
+- **Building highly scalable, highly available software** that supports millions of user transactions.
+- **Leveraging cloud technologies and automation** to improve speed, resiliency, and operational efficiency.
+- Fostering a **collaborative engineering culture** with geographically distributed teams.
+- Emphasizing **user-centric, data-driven solutions** to continuously improve functionality and experience.
+- Investing in employee wellbeing and growth, offering growth budgets, flexible work policies, and community-building activities.
+
+Though explicit corporate values are not publicly listed, the job benefits and role description imply values of continuous learning, teamwork, innovation, work-life balance, and quality engineering practices.
 
 ---
 
 # Recent News or Changes
 
-- Recently announced a strategic expansion of their cloud offerings, integrating Kubernetes-managed microservices to improve scalability and deployment speed.
-- Launched a new AI-powered analytics feature in their flagship SaaS product targeting enhanced user insights.
-- Secured Series C funding led by prominent VC firms, aimed at accelerating R&D and expanding global market reach.
-- Adopted enhanced remote collaboration tools following successful remote-first operational validation during the pandemic.
-- Internal blog posts and social media highlight ongoing commitment to DEI initiatives and engineering team growth.
+As of 2025, Happening appears to be expanding its cloud-native platform capabilities and investing in the enhancement of system automation and observability tooling. No major press releases or news items are currently available in public press or social media, indicating a stable growth phase rather than undergoing a merger/acquisition or pivot.
+
+Key recent focuses inferred from job description:
+
+- Expanding use and integration of AWS services (CloudFormation, MSK, S3, Cognito).
+- Strengthening engineering practices around distributed systems and event streaming (Kafka).
+- Investing in continuous delivery and automation pipelines.
+- Growing engineering culture and processes across globally distributed teams.
 
 ---
 
 # Role Context and Product Involvement
 
-The **Senior Software Engineer** at Tech Innovators Inc. is a pivotal member of a core product engineering team responsible for designing and maintaining scalable backend microservices and APIs that serve millions of users daily. Given the remote location and seniority level:
+The **Senior Backend Engineer (Golang)** role at Happening is a senior-level, hands-on engineering position fundamentally responsible for:
 
-- You will likely be part of a distributed agile team including product managers, other engineers, DevOps, and QA specialists.
-- The tech stack involves JavaScript/TypeScript (Node.js), Python, React on the frontend, AWS cloud infrastructure, Kubernetes orchestration, and containerization (Docker).
-- Responsibilities include leading complex feature development, system architecture improvements, and mentoring junior engineers.
-- Expect to work on infrastructure automation (CI/CD pipelines), performance optimization, database schema design (PostgreSQL, MongoDB), and integrating third-party APIs.
-- The product context suggests a SaaS platform focused on analytics, collaboration, or workflow tools serving enterprise customers with a need for reliability, security, and scalability.
+- Building and enhancing backend systems that handle **massive volumes of sports betting activity** — over 22 million bets per month.
+- Working closely with **distributed engineering teams** likely spread across multiple countries/geographies (the listing mentions Amsterdam and Spain teams).
+- Driving platform improvements that increase business functionality exposed through end-user configurable modules.
+- Developing and maintaining **common platform components and libraries** using Golang, Python, Erlang, Kafka, and AWS cloud.
+- Building on a CloudNative platform, leveraging AWS extensively for speed, scalability, and resiliency.
+- Enhancing system **automation for scaling, resiliency, and deployment pipelines**.
+- Improving **observability tooling and infrastructure** to better understand system health and performance.
+- Collaborating with both technical and non-technical stakeholders to translate requirements into platform enhancements.
+- Leading initiatives end-to-end and promoting continuous improvement in team productivity and engineering processes.
+
+The position is not remote-friendly and based in Amsterdam, necessitating on-site or local presence.
 
 ---
 
 # Likely Interview Topics
 
-1. **Technical Proficiency**
-   - Design and architecture of scalable microservices.
-   - Building and consuming RESTful and GraphQL APIs.
-   - Hands-on experience with cloud infrastructure (AWS services: EC2, S3, Lambda).
-   - Container orchestration and deployment automation using Kubernetes and Docker.
-   - Database design and query optimization in SQL and NoSQL databases.
-   - CI/CD pipeline creation and maintenance (Jenkins, GitHub Actions, Terraform).
-   - Writing testable code following TDD and best practices.
+Given the seniority and technical focus, expect the interview to cover:
 
-2. **Problem Solving and System Design**
-   - Designing systems that handle millions of daily active users with low latency.
-   - Handling fault tolerance and zero downtime deployments.
-   - Scaling backend services and data storage.
-   - Implementing caching, load balancing, and monitoring solutions.
+1. **System Design & Scalability**
+   - Design distributed systems capable of handling tens of millions of transactions monthly.
+   - Approaches to scale and resiliency for high-throughput event processing.
+   - Usage of event streaming platforms like Kafka in betting platforms.
 
-3. **Collaboration and Agile Methodologies**
-   - Working in agile teams, sprint planning, and iterative delivery.
-   - Cross-functional communication with product, design, and QA.
-   - Mentoring and knowledge sharing with junior developers.
+2. **Backend Engineering with Golang**
+   - Deep knowledge of Golang concurrency patterns, memory management, and idiomatic Go.
+   - Writing clean, maintainable, and testable code with automated testing strategies.
+   - Experience integrating with AWS services programmatically (CloudFormation, MSK, S3, Cognito).
 
-4. **Behavioral and Cultural Fit**
-   - Motivation for joining Tech Innovators and alignment with their mission.
-   - Handling challenging situations in distributed teams.
-   - Examples of initiative and leadership.
-   - Commitment to continuous learning and diversity inclusion.
+3. **Cloud Native Infrastructure & Automation**
+   - CI/CD pipelines, infrastructure as code, and automated deployment strategies.
+   - Experience with AWS services and cloud native architecture design.
+   - Observability and monitoring tools for distributed systems.
+
+4. **Distributed Systems & Event-driven Architecture**
+   - Designing reliable messaging and event processing systems.
+   - Handling data consistency, fault tolerance, and failure recovery.
+   - Erlang knowledge may be probed as it’s used for robustness in telecom/real-time systems.
+
+5. **Collaboration & Leadership**
+   - Experience working with geographically distributed teams.
+   - Communication skills to work with both technical and non-technical stakeholders.
+   - Leading initiatives and driving process improvements.
+
+6. **Behavioral**
+   - Passion for learning new technologies.
+   - Balancing speed and quality in fast-paced environments.
+   - Approaches to user-centric and data-driven product enhancements.
 
 ---
 
 # Suggested Questions to Ask
 
-- **About the Team and Role**
-  - Can you describe the current team structure and how this role interacts with other teams (product, QA, DevOps)?
-  - What are the biggest technical challenges the engineering team is facing right now?
-  - What does success look like for this Senior Software Engineer in the first 6-12 months?
+To demonstrate strong interest and further your understanding, consider asking:
 
-- **Product and Technology**
-  - Could you share more about the core products or platforms this position will directly impact?
-  - How does the company approach technical debt and refactoring efforts?
-  - What is the stack or workflow around CI/CD, monitoring, and incident response?
-
-- **Growth and Culture**
-  - How does Tech Innovators support career development and learning for senior engineers?
-  - Can you elaborate on how remote work is managed and how inclusion is fostered in a distributed environment?
-  - What initiatives does the company have around DEI, and how does engineering contribute?
-
-- **Company Direction**
-  - Are there any upcoming technology or product pivots planned in the near future?
-  - How does the company envision growth over the next 1-3 years, especially in engineering capabilities?
-  - What role do senior engineers play in product strategy or customer engagement?
+- How does Happening ensure data consistency and integrity when processing such a high volume of bets in distributed environments?
+- Can you describe the current CloudNative platform architecture, and what AWS services play critical roles?
+- What are some of the biggest technical challenges your backend teams face today?
+- How do engineering teams collaborate across different office locations, and what tools/processes support this?
+- What is the company’s approach to continuous delivery and observability?
+- How is success measured for the Senior Backend Engineer role, beyond technical KPIs?
+- What opportunities exist for professional growth and learning within the engineering department?
+- How close is the collaboration between backend engineers and product or business teams in defining new features?
+- Can you provide examples of recent initiatives that improved system scale or resiliency?
+- How does Happening handle regulatory compliance and security challenges typical to the betting industry?
 
 ---
 
-**Preparing with these insights ensures you are positioned as a motivated candidate aligned with Tech Innovators Inc.'s mission, ready to tackle their technical challenges, and eager to contribute to their collaborative culture.**  
-Good luck with your interview preparation!
+*Being prepared on these fronts will help you engage confidently, showcase your fit for the role, and signal your keen interest in Happening’s platform and engineering culture.*
 ```
