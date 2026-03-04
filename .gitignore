@@ -20,5 +20,7 @@ build/
 # Other commonly ignored files
 .env
 .idea/
+.vscode/
+*.code-workspace
 
 .db
