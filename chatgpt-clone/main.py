@@ -6,7 +6,15 @@ from openai import OpenAI
 import asyncio
 import base64
 import streamlit as st
-from agents import Agent, Runner, SQLiteSession, WebSearchTool, FileSearchTool
+from agents import (
+    Agent,
+    Runner,
+    SQLiteSession,
+    WebSearchTool,
+    FileSearchTool,
+    ImageGenerationTool,
+)
+from filtered_sqlite_session import FilterSQLiteSession
 
 client = OpenAI()
 
@@ -28,13 +36,22 @@ if "agent" not in st.session_state:
                 vector_store_ids=[VECTOR_STORE_ID],
                 max_num_results=3,  # 파일이 여러개일 경우 상위 3개만 가져옴.
             ),
+            ImageGenerationTool(
+                tool_config={
+                    "type": "image_generation",
+                    "quality": "low",
+                    "output_format": "jpeg",
+                    "moderation": "low",
+                    "partial_images": 1,
+                }
+            ),
         ],
     )
 
 agent = st.session_state["agent"]
 
 if "session" not in st.session_state:
-    st.session_state["session"] = SQLiteSession(
+    st.session_state["session"] = FilterSQLiteSession(
         "chat-history",
         "chat-gpt-clone-memory.db",
     )
@@ -59,12 +76,17 @@ async def paint_history():
                     if message["type"] == "message":
                         st.write(message["content"][0]["text"])
         if "type" in message:
-            if message["type"] == "web_search_call":
+            message_type = message["type"]
+            if message_type == "web_search_call":
                 with st.chat_message("ai"):
                     st.write("🔎 Searched the web...")
-            elif message["type"] == "file_search_call":
+            elif message_type == "file_search_call":
                 with st.chat_message("ai"):
                     st.write("🗂️ Searched the Files...")
+            elif message_type == "image_generation_call":
+                image = base64.b64decode(message["result"])
+                with st.chat_message("ai"):
+                    st.image(image)
 
 
 asyncio.run(paint_history())
@@ -94,6 +116,15 @@ def update_status(status_container, event):
             "🔎 File Search in Progress...",
             "running",
         ),
+        "response.image_generation_call.generating": (
+            "🎨 Drawing image...",
+            "running",
+        ),
+        "response.image_generation_call.in_progress": (
+            "🎨 Drawing image...",
+            "running",
+        ),
+        "response.completed": (" ", "complete"),
     }
 
     if event in status_messages:
@@ -103,8 +134,9 @@ def update_status(status_container, event):
 
 async def run_agent(message):
     with st.chat_message("ai"):
-        text_placeholder = st.empty()
         status_container = st.status("⏳", expanded=False)
+        text_placeholder = st.empty()
+        image_placeholder = st.empty()
         response = ""
 
         stream = Runner.run_streamed(
@@ -119,6 +151,12 @@ async def run_agent(message):
                 if event.data.type == "response.output_text.delta":
                     response += event.data.delta
                     text_placeholder.write(response)
+                elif event.data.type == "response.image_generation_call.partial_image":
+                    image = base64.b64decode(event.data.partial_image_b64)
+                    image_placeholder.image(image)
+                # elif event.data.type == "response.completed":
+                #     image_placeholder.empty()
+                #     text_placeholder.empty()
 
 
 prompt = st.chat_input(
