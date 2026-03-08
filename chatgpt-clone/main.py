@@ -4,6 +4,7 @@ dotenv.load_dotenv()
 
 from openai import OpenAI
 import asyncio
+import base64
 import streamlit as st
 from agents import Agent, Runner, SQLiteSession, WebSearchTool, FileSearchTool
 
@@ -47,7 +48,13 @@ async def paint_history():
         if "role" in message:
             with st.chat_message(message["role"]):
                 if message["role"] == "user":
-                    st.write(message["content"])
+                    content = message["content"]
+                    if isinstance(content, str):
+                        st.write(message["content"])
+                    elif isinstance(content, list):
+                        for part in content:
+                            if "image_url" in part:
+                                st.image(part["image_url"])
                 else:
                     if message["type"] == "message":
                         st.write(message["content"][0]["text"])
@@ -117,7 +124,7 @@ async def run_agent(message):
 prompt = st.chat_input(
     "Write a message for your assistant",
     accept_file=True,
-    file_type=["txt"],
+    file_type=["txt", "jpg", "png", "jpeg"],
 )
 
 if prompt:
@@ -135,6 +142,31 @@ if prompt:
                         file_id=uploaded_file.id,
                     )
                     status.update(label="✅ File Uploaded", state="complete")
+        elif file.type.startswith("image/"):
+            with st.status("⏳ Uploading file...") as status:
+                file_bytes = file.getvalue()
+                base64_data = base64.b64encode(file_bytes).decode("utf-8")
+                data_uri = f"data:{file.type};base64,{base64_data}"
+                st.write(data_uri)
+                asyncio.run(
+                    session.add_items(
+                        [
+                            {
+                                "role": "user",
+                                "content": [
+                                    {
+                                        "type": "input_image",
+                                        "detail": "auto",
+                                        "image_url": data_uri,
+                                    }
+                                ],
+                            }
+                        ]
+                    )
+                )
+                status.update(label="✅ Image Uploaded", state="complete")
+            with st.chat_message("human"):
+                st.image(data_uri)
 
     if prompt.text:
         with st.chat_message("human"):
