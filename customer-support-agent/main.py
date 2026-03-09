@@ -4,10 +4,25 @@ dotenv.load_dotenv()
 from openai import OpenAI
 import asyncio
 import streamlit as st
-from agents import Runner, SQLiteSession
+from agents import Runner, SQLiteSession, function_tool, RunContextWrapper
+from models import UserAccountContext
+
+
+@function_tool
+def get_user_tier(wrapper: RunContextWrapper[UserAccountContext]):
+    return (
+        f"The user {wrapper.context.customer_id} has a {wrapper.context.tier} account."
+    )
+
 
 client = OpenAI()
 
+# Context : https://openai.github.io/openai-agents-python/context/
+user_account_ctx = UserAccountContext(
+    customer_id=1,
+    name="nico",
+    tier="basic",
+)
 
 if "session" not in st.session_state:
     st.session_state["session"] = SQLiteSession(
@@ -44,6 +59,7 @@ async def run_agent(message):
             agent,
             message,
             session=session,
+            context=user_account_ctx,  # Agent가 직접 접근하는 것이 아닌, function_tool과 같은 함수에 argument로 전달되는 것.
         )
 
         async for event in stream.stream_events():
