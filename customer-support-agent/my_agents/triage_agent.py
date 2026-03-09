@@ -1,7 +1,37 @@
 # 질문을 받아서 적절한 에이전트에게 질문을 넘기는 역할
 # Guardrail을 통해 질문을 사전에 거부할 수 있음.
-from agents import Agent, RunContextWrapper
-from models import UserAccountContext
+from agents import (
+    Agent,
+    RunContextWrapper,
+    input_guardrail,
+    Runner,
+    GuardrailFunctionOutput,
+)
+from models import UserAccountContext, InputGuardrailOutput
+
+input_guardrail_agent = Agent(
+    name="Input Guardrail Agent",
+    instructions=""""
+    Ensure the user's request specifically pertains to User Account details, Billing inquiries, Order information, or Technical Support issues, and is not off-topic. 
+    If the request is off-topic, return a reason for the tripwire. You can make small conversation with the user, specially at the beginning of the conversation, 
+    but don't help with requests that are not related to User Account details, Billing inquiries, Order information, or Technical Support issues.
+    """,
+    output_type=InputGuardrailOutput,
+)
+
+
+@input_guardrail
+async def off_topic_guardrail(
+    wrapper: RunContextWrapper[UserAccountContext],
+    agent: Agent[UserAccountContext],
+    input: str,
+):
+    result = await Runner.run(input_guardrail_agent, input, context=wrapper.context)
+
+    return GuardrailFunctionOutput(
+        output_info=result.final_output,  # Optional
+        tripwire_triggered=result.final_output.is_off_topic,  # Required : Tripwire Triggered ==> All Agent Stopped
+    )
 
 
 # Context가 들어가는 두번째 위치 : 동적 지침(Dynamic Instruction)
@@ -65,5 +95,8 @@ def dynamic_triage_agent_instructions(
 
 triage_agent = Agent(
     name="Triage Agent",
-    instructions=dynamic_triage_agent_instructions(),
+    instructions=dynamic_triage_agent_instructions,
+    input_guardrails=[
+        off_topic_guardrail,  # Triage Agent 직전에 실행될 가드레일 에이전트
+    ],
 )
