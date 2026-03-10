@@ -1,11 +1,12 @@
 from agents import Agent, RunContextWrapper
-from models import UserAccountContext
+from models import UserAccountContext, TechnicalOutputGuardrailOutput
 from tools import (
     run_diagnostic_check,
     provide_troubleshooting_steps,
     escalate_to_engineering,
     AgentToolUsageLoggingHooks,
 )
+from output_guardrails import technical_output_guardrail
 
 
 def dynamic_technical_agent_instructions(
@@ -51,4 +52,5 @@ technical_agent = Agent(
         escalate_to_engineering,
     ],
     hooks=AgentToolUsageLoggingHooks(),
+    output_guardrails=[technical_output_guardrail],
 )

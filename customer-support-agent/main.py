@@ -10,6 +10,7 @@ from agents import (
     function_tool,
     RunContextWrapper,
     InputGuardrailTripwireTriggered,
+    OutputGuardrailTripwireTriggered,
 )
 from models import UserAccountContext
 from my_agents.triage_agent import triage_agent
@@ -84,6 +85,9 @@ async def run_agent(message):
                         response = ""
         except InputGuardrailTripwireTriggered:
             st.write("I can't help you with that.")
+        except OutputGuardrailTripwireTriggered:
+            st.write("Cant show you that answer")
+            st.session_state["text_placeholder"].empty()
 
 
 message = st.chat_input(
