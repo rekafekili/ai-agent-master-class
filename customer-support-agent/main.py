@@ -19,6 +19,7 @@ client = OpenAI()
 user_account_ctx = UserAccountContext(
     customer_id=1,
     name="nico",
+    email="nico@nomad.coder",
     tier="basic",
 )
 
@@ -39,7 +40,7 @@ async def paint_history():
                     st.write(message["content"])
                 else:
                     if message["type"] == "message":
-                        st.write(message["content"][0]["text"].replace("$", "\$"))
+                        st.write(message["content"][0]["text"])
 
 
 asyncio.run(paint_history())
@@ -66,7 +67,7 @@ async def run_agent(message):
 
                     if event.data.type == "response.output_text.delta":
                         response += event.data.delta
-                        text_placeholder.write(response.replace("$", "\$"))
+                        text_placeholder.write(response)
         except InputGuardrailTripwireTriggered:
             st.write("I can't help you with that.")
 

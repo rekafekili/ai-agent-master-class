@@ -1,13 +1,21 @@
 # 질문을 받아서 적절한 에이전트에게 질문을 넘기는 역할
 # Guardrail을 통해 질문을 사전에 거부할 수 있음.
+import streamlit as st
 from agents import (
     Agent,
     RunContextWrapper,
     input_guardrail,
     Runner,
     GuardrailFunctionOutput,
+    handoff,
 )
-from models import UserAccountContext, InputGuardrailOutput
+from agents.extensions.handoff_prompt import RECOMMENDED_PROMPT_PREFIX
+from agents.extensions import handoff_filters
+from models import UserAccountContext, InputGuardrailOutput, HandoffData
+from my_agents.account_agent import account_agent
+from my_agents.billing_agent import billing_agent
+from my_agents.order_agent import order_agent
+from my_agents.technical_agent import technical_agent
 
 input_guardrail_agent = Agent(
     name="Input Guardrail Agent",
@@ -39,7 +47,10 @@ def dynamic_triage_agent_instructions(
     wrapper: RunContextWrapper[UserAccountContext],
     agent: Agent[UserAccountContext],
 ):
-    return """
+    return f"""
+    {RECOMMENDED_PROMPT_PREFIX}
+
+
     You are a customer support agent. You ONLY help customers with their questions about their User Account, Billing, Orders, or Technical Support.
     You call customers by their name.
     
@@ -93,10 +104,48 @@ def dynamic_triage_agent_instructions(
     """
 
 
+async def handle_handoff(
+    wrapper: RunContextWrapper[UserAccountContext],
+    input_data: HandoffData,
+):
+    with st.sidebar:
+        st.write(
+            f"""
+            Handing off to {input_data.to_agent_name}
+            Reason: {input_data.reason}
+            Issue Type: {input_data.issue_type}
+            Issue Description: {input_data.issue_description}
+        """
+        )
+
+
+def make_handoff(agent):
+    return (
+        handoff(
+            agent=agent,
+            on_handoff=handle_handoff,  # Event Listener
+            input_type=HandoffData,
+            input_filter=handoff_filters.remove_all_tools,
+        ),
+    )
+
+
 triage_agent = Agent(
     name="Triage Agent",
     instructions=dynamic_triage_agent_instructions,
     input_guardrails=[
         off_topic_guardrail,  # Triage Agent 직전에 실행될 가드레일 에이전트
+    ],
+    # tools=[  # Triage Agent가 계속 주도권을 쥐고 있음.
+    #     technical_agent.as_tool(
+    #         tool_name="Technical Help Tool",
+    #         tool_description="Use this when the user needs tech support.",
+    #     ),
+    # ],
+    handoffs=[
+        make_handoff(account_agent),
+        make_handoff(billing_agent),
+        make_handoff(order_agent),
+        make_handoff(technical_agent),
     ],
 )
