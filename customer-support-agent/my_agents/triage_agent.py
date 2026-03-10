@@ -120,13 +120,11 @@ async def handle_handoff(
 
 
 def make_handoff(agent):
-    return (
-        handoff(
-            agent=agent,
-            on_handoff=handle_handoff,  # Event Listener
-            input_type=HandoffData,
-            input_filter=handoff_filters.remove_all_tools,
-        ),
+    return handoff(
+        agent=agent,
+        on_handoff=handle_handoff,  # Event Listener
+        input_type=HandoffData,
+        input_filter=handoff_filters.remove_all_tools,
     )
 
 
