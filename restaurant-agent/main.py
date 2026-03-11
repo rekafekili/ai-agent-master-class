@@ -5,7 +5,13 @@ dotenv.load_dotenv()
 import streamlit as st
 import asyncio
 from openai import OpenAI
-from agents import SQLiteSession, Runner, Agent, InputGuardrailTripwireTriggered
+from agents import (
+    SQLiteSession,
+    Runner,
+    Agent,
+    InputGuardrailTripwireTriggered,
+    OutputGuardrailTripwireTriggered,
+)
 from multi_agents.triage_agent import triage_agent
 from models import UserAccountContext
 
@@ -51,27 +57,34 @@ async def run_agent(message):
 
         st.session_state["text_placeholder"] = text_placeholder
 
-        stream = Runner.run_streamed(
-            st.session_state["agent"],
-            message,
-            session=session,
-            context=user_account_context,
-        )
+        try:
+            stream = Runner.run_streamed(
+                st.session_state["agent"],
+                message,
+                session=session,
+                context=user_account_context,
+            )
 
-        async for event in stream.stream_events():
-            if event.type == "raw_response_event":
-                if event.data.type == "response.output_text.delta":
-                    response += event.data.delta
-                    text_placeholder.write(response)
-            elif event.type == "agent_updated_stream_event":
-                session_agent: Agent = st.session_state["agent"]
-                if session_agent.name != event.new_agent.name:
-                    st.write(
-                        f"🤖 Transfered from {session_agent.name} to {event.new_agent.name}"
-                    )
-                    st.session_state["agent"] = event.new_agent
-                    text_placeholder = st.empty()
-                    response = ""
+            async for event in stream.stream_events():
+                if event.type == "raw_response_event":
+                    if event.data.type == "response.output_text.delta":
+                        response += event.data.delta
+                        text_placeholder.write(response)
+                elif event.type == "agent_updated_stream_event":
+                    session_agent: Agent = st.session_state["agent"]
+                    if session_agent.name != event.new_agent.name:
+                        st.write(
+                            f"🤖 Transfered from {session_agent.name} to {event.new_agent.name}"
+                        )
+                        st.session_state["agent"] = event.new_agent
+                        text_placeholder = st.empty()
+                        response = ""
+        except InputGuardrailTripwireTriggered:
+            st.write("죄송합니다. 답변 드릴 수 없습니다.")
+            st.session_state["text_placeholder"].empty()
+        except OutputGuardrailTripwireTriggered:
+            st.write("죄송합니다. 답변 중 에러가 발생하였습니다.")
+            st.session_state["text_placeholder"].empty()
 
 
 message = st.chat_input("Write a message for your assistant")

@@ -1,6 +1,7 @@
 from agents import Agent, RunContextWrapper
 from models import UserAccountContext
-from tools import AgentToolUsageLoggingHooks
+from tools import AgentToolUsageLoggingHooks, get_full_menu, search_menu_by_ingredient, get_menu_detail
+from multi_agents.guardrails.common_output_guardrail import output_guardrail
 
 
 def dynamic_instruction(
@@ -25,6 +26,6 @@ menu_agent = Agent(
     name="Menu Agent",
     instructions=dynamic_instruction,
     hooks=AgentToolUsageLoggingHooks(),
+    tools=[get_full_menu, search_menu_by_ingredient, get_menu_detail],
+    output_guardrails=[output_guardrail],
 )
-
-# Tools -> 메뉴판 정보 조회, 각 메뉴의 레시피 조회 등 추가 // 식당 테이블 가상 설정 및 예약 현황 파악

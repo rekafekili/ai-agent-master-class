@@ -1,6 +1,7 @@
 from agents import Agent, RunContextWrapper
 from models import UserAccountContext
-from tools import AgentToolUsageLoggingHooks
+from tools import AgentToolUsageLoggingHooks, get_table_status, get_available_tables
+from multi_agents.guardrails.common_output_guardrail import output_guardrail
 
 
 def dynamic_instruction(
@@ -31,4 +32,6 @@ reservation_agent = Agent(
     name="Reservation Agent",
     instructions=dynamic_instruction,
     hooks=AgentToolUsageLoggingHooks(),
+    tools=[get_table_status, get_available_tables],
+    output_guardrails=[output_guardrail],
 )

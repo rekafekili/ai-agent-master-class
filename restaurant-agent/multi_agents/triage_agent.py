@@ -1,42 +1,13 @@
 import streamlit as st
-from agents import (
-    Agent,
-    input_guardrail,
-    RunContextWrapper,
-    Runner,
-    GuardrailFunctionOutput,
-    handoff,
-)
+from agents import Agent, RunContextWrapper, handoff
 from agents.extensions.handoff_prompt import prompt_with_handoff_instructions
 from agents.extensions import handoff_filters
-from models import UserAccountContext, InputGuardrailOutput, HandoffData
+from models import UserAccountContext, HandoffData
+from multi_agents.guardrails.off_topic_input_guardrail import off_topic_guardrail
 from multi_agents.menu_agent import menu_agent
 from multi_agents.order_agent import order_agent
 from multi_agents.reservation_agent import reservation_agent
-
-input_guardrail_agent = Agent(
-    name="Input Guardrail Agent",
-    instructions="""
-    You are the Domain Filter. Your goal is to ensure the conversation stays within the restaurant's business scope.
-    Identify Relevant Topics: Only allow inputs related to menu information, food ingredients, allergies, table reservations, and food ordering.
-    Block Irrelevant Topics: If the user asks about politics, religion, coding, sports, or other general knowledge, politely steer them back: "I specialize in our restaurant's services. How can I help you with your meal or reservation today?"
-    Handle Ambiguity: If the input is too vague or consists of random characters, ask for clarification instead of guessing the intent.
-    """,
-    output_type=InputGuardrailOutput,
-)
-
-
-@input_guardrail
-async def off_topic_guardrail(
-    wrapper: RunContextWrapper[UserAccountContext],
-    agent: Agent[UserAccountContext],
-    input: str,
-):
-    result = await Runner.run(input_guardrail_agent, input, context=wrapper.context)
-    return GuardrailFunctionOutput(
-        output_info=result.final_output,
-        tripwire_triggered=result.final_output.is_off_topic,
-    )
+from multi_agents.complaint_agent import complaint_agent
 
 
 def dynamic_instruction(
@@ -77,6 +48,10 @@ def dynamic_instruction(
     - To place/modify an order:
     * ACTION: If the current agent is NOT the Order Agent, transfer to the Order Agent.
 
+    - To handle complaints, dissatisfaction, or negative feedback:
+    * ACTION: If the customer expresses a complaint, frustration, or reports a problem with food/service/hygiene, transfer to the Complaint Agent.
+    * EXAMPLES: "음식이 이상해요", "너무 오래 기다렸어요", "환불해주세요", "매니저 불러주세요", "불만이 있어요"
+
     [Tone & Style]
     Maintain a sophisticated, helpful, and attentive tone. Use the customer's profile to make them feel recognized without being intrusive.
     When in doubt, ask the customer what they need rather than guessing and handing off.
@@ -116,6 +91,7 @@ triage_agent = Agent(
         make_handoff(menu_agent),
         make_handoff(order_agent),
         make_handoff(reservation_agent),
+        make_handoff(complaint_agent),
     ],
 )
 
@@ -123,3 +99,4 @@ triage_agent = Agent(
 menu_agent.handoffs = [make_handoff(triage_agent)]
 order_agent.handoffs = [make_handoff(triage_agent)]
 reservation_agent.handoffs = [make_handoff(triage_agent)]
+complaint_agent.handoffs = [make_handoff(triage_agent)]

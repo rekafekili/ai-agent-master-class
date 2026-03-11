@@ -17,3 +17,10 @@ class HandoffData(BaseModel):
     issue_type: str
     issue_description: str
     reason: str
+
+
+class OutputGuardrailOutput(BaseModel):
+    is_off_topic: bool
+    is_off_expert: bool
+    is_contain_account_data: bool
+    reason: str
