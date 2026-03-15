@@ -1,9 +1,14 @@
+import os
 import dotenv
 from mocks import MENU_DATA, COMMON_ALLERGENS, AGENT_LIST
 
 dotenv.load_dotenv()
 
 import streamlit as st
+
+# Streamlit Cloud: st.secrets에서 API 키 로드
+if "OPENAI_API_KEY" in st.secrets:
+    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 import asyncio
 from openai import OpenAI
 from agents import (
