@@ -1,6 +1,11 @@
 from agents import Agent, RunContextWrapper
 from models import UserAccountContext
-from tools import AgentToolUsageLoggingHooks, get_full_menu, search_menu_by_ingredient, get_menu_detail
+from tools import (
+    AgentToolUsageLoggingHooks,
+    get_full_menu,
+    search_menu_by_ingredient,
+    get_menu_detail,
+)
 from multi_agents.guardrails.common_output_guardrail import output_guardrail
 
 
@@ -25,7 +30,7 @@ def dynamic_instruction(
 menu_agent = Agent(
     name="Menu Agent",
     instructions=dynamic_instruction,
-    hooks=AgentToolUsageLoggingHooks(),
+    # hooks=AgentToolUsageLoggingHooks(),
     tools=[get_full_menu, search_menu_by_ingredient, get_menu_detail],
     output_guardrails=[output_guardrail],
 )

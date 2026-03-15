@@ -68,8 +68,6 @@ async def handle_handoff(
             f"""
             Handing off to {input_data.to_agent_name}
             Reason : {input_data.reason}
-            Issue Type : {input_data.issue_type}
-            Issue Description : {input_data.issue_description}
         """
         )
 

@@ -1,6 +1,6 @@
 from agents import Agent, RunContextWrapper
 from models import UserAccountContext
-from tools import AgentToolUsageLoggingHooks, get_order_queue_status, get_order_policy
+from tools import AgentToolUsageLoggingHooks, get_order_queue_status, get_order_policy, place_order
 from multi_agents.guardrails.common_output_guardrail import output_guardrail
 
 
@@ -26,7 +26,7 @@ def dynamic_instruction(
 order_agent = Agent(
     name="Order Agent",
     instructions=dynamic_instruction,
-    hooks=AgentToolUsageLoggingHooks(),
-    tools=[get_order_queue_status, get_order_policy],
+    # hooks=AgentToolUsageLoggingHooks(),
+    tools=[get_order_queue_status, get_order_policy, place_order],
     output_guardrails=[output_guardrail],
 )

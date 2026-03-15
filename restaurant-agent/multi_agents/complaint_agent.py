@@ -40,7 +40,7 @@ def dynamic_instruction(
     [Severity Guide]
     - 보통: Minor inconveniences (slight delay, cold food, wrong side dish)
     - 심각: Quality failures, hygiene concerns, repeated issues, rude staff
-    - 긴급: Allergy incidents, health risks, food safety violations → ALWAYS escalate immediately
+    - 긴급: Allergy incidents, health risks, food safety violations → ALWAYS escalat1e immediately
 
     [Tone & Style]
     - Warm, sincere, and professional. Never defensive.
@@ -57,7 +57,7 @@ def dynamic_instruction(
 complaint_agent = Agent(
     name="Complaint Agent",
     instructions=dynamic_instruction,
-    hooks=AgentToolUsageLoggingHooks(),
+    # hooks=AgentToolUsageLoggingHooks(),
     tools=[lookup_refund_policy, lookup_discount_policy, escalate_to_manager],
     output_guardrails=[output_guardrail],
 )

@@ -31,7 +31,7 @@ def dynamic_instruction(
 reservation_agent = Agent(
     name="Reservation Agent",
     instructions=dynamic_instruction,
-    hooks=AgentToolUsageLoggingHooks(),
+    # hooks=AgentToolUsageLoggingHooks(),
     tools=[get_table_status, get_available_tables],
     output_guardrails=[output_guardrail],
 )

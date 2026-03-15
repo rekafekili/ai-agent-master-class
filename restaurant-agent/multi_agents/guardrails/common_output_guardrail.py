@@ -29,10 +29,6 @@ async def output_guardrail(
 
     validation: OutputGuardrailOutput = result.final_output
 
-    triggered = (
-        validation.is_off_topic
-        or validation.is_off_expert
-        or validation.is_contain_account_data
-    )
+    triggered = validation.is_off_topic or validation.is_off_expert
 
     return GuardrailFunctionOutput(output_info=validation, tripwire_triggered=triggered)

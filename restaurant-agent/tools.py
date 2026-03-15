@@ -1,6 +1,7 @@
 import streamlit as st
 from agents import function_tool, AgentHooks, Agent, Tool, RunContextWrapper
 from models import UserAccountContext
+from mocks import MENU_DATA
 import random
 from datetime import datetime
 
@@ -8,21 +9,6 @@ from datetime import datetime
 # =============================================================================
 # MENU AGENT TOOLS
 # =============================================================================
-
-MENU_DATA = [
-    {"name": "김치찌개", "ingredients": ["김치", "돼지고기", "두부", "대파", "고춧가루"], "price": 9000, "calories": 380, "category": "찌개"},
-    {"name": "된장찌개", "ingredients": ["된장", "두부", "감자", "호박", "대파", "고추"], "price": 8500, "calories": 320, "category": "찌개"},
-    {"name": "불고기", "ingredients": ["소고기", "양파", "당근", "배", "간장", "참기름"], "price": 15000, "calories": 450, "category": "고기"},
-    {"name": "갈비찜", "ingredients": ["소갈비", "무", "당근", "밤", "대추", "간장"], "price": 28000, "calories": 620, "category": "고기"},
-    {"name": "삼겹살", "ingredients": ["돼지고기", "마늘", "상추", "쌈장"], "price": 16000, "calories": 550, "category": "고기"},
-    {"name": "비빔밥", "ingredients": ["밥", "시금치", "당근", "콩나물", "고추장", "계란"], "price": 10000, "calories": 480, "category": "밥"},
-    {"name": "해물파전", "ingredients": ["밀가루", "오징어", "새우", "대파", "계란"], "price": 14000, "calories": 390, "category": "전"},
-    {"name": "잡채", "ingredients": ["당면", "시금치", "당근", "버섯", "소고기", "간장"], "price": 12000, "calories": 350, "category": "반찬"},
-    {"name": "냉면", "ingredients": ["메밀면", "육수", "소고기", "무", "계란", "겨자"], "price": 11000, "calories": 430, "category": "면"},
-    {"name": "떡볶이", "ingredients": ["떡", "어묵", "고추장", "대파", "삶은계란"], "price": 7000, "calories": 410, "category": "분식"},
-    {"name": "순두부찌개", "ingredients": ["순두부", "해물", "계란", "대파", "고춧가루"], "price": 9500, "calories": 290, "category": "찌개"},
-    {"name": "제육볶음", "ingredients": ["돼지고기", "고추장", "양파", "대파", "고추"], "price": 11000, "calories": 480, "category": "고기"},
-]
 
 
 @function_tool
@@ -99,12 +85,111 @@ def get_menu_detail(context: UserAccountContext, dish_name: str) -> str:
 # =============================================================================
 
 ORDER_QUEUE = [
-    {"order_id": "ORD-001", "table": 3, "items": ["김치찌개 x1", "불고기 x1", "비빔밥 x2"], "status": "조리중", "wait_minutes": 15},
-    {"order_id": "ORD-002", "table": 7, "items": ["삼겹살 x2", "된장찌개 x1"], "status": "조리중", "wait_minutes": 20},
-    {"order_id": "ORD-003", "table": 1, "items": ["해물파전 x1", "냉면 x2"], "status": "대기중", "wait_minutes": 30},
-    {"order_id": "ORD-004", "table": 5, "items": ["갈비찜 x1", "잡채 x1", "떡볶이 x1"], "status": "대기중", "wait_minutes": 35},
-    {"order_id": "ORD-005", "table": 10, "items": ["순두부찌개 x2", "제육볶음 x1"], "status": "서빙완료", "wait_minutes": 0},
+    {
+        "order_id": "ORD-001",
+        "table": 3,
+        "items": ["김치찌개 x1", "불고기 x1", "비빔밥 x2"],
+        "status": "조리중",
+        "wait_minutes": 15,
+    },
+    {
+        "order_id": "ORD-002",
+        "table": 7,
+        "items": ["삼겹살 x2", "된장찌개 x1"],
+        "status": "조리중",
+        "wait_minutes": 20,
+    },
+    {
+        "order_id": "ORD-003",
+        "table": 1,
+        "items": ["해물파전 x1", "냉면 x2"],
+        "status": "대기중",
+        "wait_minutes": 30,
+    },
+    {
+        "order_id": "ORD-004",
+        "table": 5,
+        "items": ["갈비찜 x1", "잡채 x1", "떡볶이 x1"],
+        "status": "대기중",
+        "wait_minutes": 35,
+    },
+    {
+        "order_id": "ORD-005",
+        "table": 10,
+        "items": ["순두부찌개 x2", "제육볶음 x1"],
+        "status": "서빙완료",
+        "wait_minutes": 0,
+    },
 ]
+
+@function_tool
+def place_order(
+    context: UserAccountContext, items: list[str], table_number: int
+) -> str:
+    """
+    Place a new order for the customer. Use this tool when the customer confirms their order.
+
+    Args:
+        items: List of order items (e.g. ["김치찌개 x2", "불고기 x1"])
+        table_number: Table number for the order
+    """
+    order_id = f"ORD-{random.randint(100, 999)}"
+    now = datetime.now()
+
+    # 알레르기 재료 경고 체크
+    warnings = []
+    if context.allergies:
+        for item_str in items:
+            dish_name = item_str.split(" x")[0].strip()
+            for menu_item in MENU_DATA:
+                if menu_item["name"] == dish_name:
+                    conflicts = [
+                        a
+                        for a in context.allergies
+                        if a in menu_item["ingredients"]
+                    ]
+                    if conflicts:
+                        warnings.append(
+                            f"⚠️ '{dish_name}'에 알레르기 재료 포함: {', '.join(conflicts)}"
+                        )
+
+    # 총 금액 계산
+    total = 0
+    for item_str in items:
+        parts = item_str.split(" x")
+        dish_name = parts[0].strip()
+        qty = int(parts[1]) if len(parts) > 1 else 1
+        for menu_item in MENU_DATA:
+            if menu_item["name"] == dish_name:
+                total += menu_item["price"] * qty
+                break
+
+    # 주문 대기열에 추가
+    new_order = {
+        "order_id": order_id,
+        "table": table_number,
+        "items": items,
+        "status": "대기중",
+        "wait_minutes": random.randint(15, 30),
+    }
+    ORDER_QUEUE.append(new_order)
+
+    result = f"""
+✅ 주문이 접수되었습니다!
+
+📋 주문 번호: {order_id}
+📅 접수 시간: {now.strftime('%H:%M')}
+🪑 테이블: {table_number}번
+🍽️ 주문 내역: {', '.join(items)}
+💰 총 금액: ₩{total:,}
+⏳ 예상 대기: 약 {new_order['wait_minutes']}분
+    """.strip()
+
+    if warnings:
+        result += "\n\n" + "\n".join(warnings)
+
+    return result
+
 
 ORDER_POLICIES = {
     "취소": "주문 후 5분 이내에만 취소 가능합니다. 조리가 시작된 주문은 취소할 수 없습니다.",
@@ -133,16 +218,22 @@ def get_order_queue_status(context: UserAccountContext) -> str:
     ]
 
     for order in ORDER_QUEUE:
-        status_icon = {"조리중": "🔥", "대기중": "⏳", "서빙완료": "✅"}[order["status"]]
+        status_icon = {"조리중": "🔥", "대기중": "⏳", "서빙완료": "✅"}[
+            order["status"]
+        ]
         items_str = ", ".join(order["items"])
-        wait_str = f"약 {order['wait_minutes']}분" if order["wait_minutes"] > 0 else "완료"
+        wait_str = (
+            f"약 {order['wait_minutes']}분" if order["wait_minutes"] > 0 else "완료"
+        )
         lines.append(
             f"{status_icon} {order['order_id']} (테이블 {order['table']})\n"
             f"   메뉴: {items_str}\n"
             f"   예상 대기: {wait_str}"
         )
 
-    avg_wait = sum(o["wait_minutes"] for o in ORDER_QUEUE if o["status"] != "서빙완료") / max(len(cooking) + len(waiting), 1)
+    avg_wait = sum(
+        o["wait_minutes"] for o in ORDER_QUEUE if o["status"] != "서빙완료"
+    ) / max(len(cooking) + len(waiting), 1)
     lines.append(f"\n📈 현재 평균 대기 시간: 약 {int(avg_wait)}분")
 
     return "\n".join(lines)
@@ -169,16 +260,58 @@ def get_order_policy(context: UserAccountContext, policy_topic: str) -> str:
 # =============================================================================
 
 TABLES = [
-    {"table_id": 1, "seats": 2, "status": "사용중", "reserved_by": "김민수", "time": "18:00-19:30"},
-    {"table_id": 2, "seats": 2, "status": "예약됨", "reserved_by": "이서연", "time": "19:00-20:30"},
-    {"table_id": 3, "seats": 4, "status": "사용중", "reserved_by": "박지훈", "time": "18:30-20:00"},
+    {
+        "table_id": 1,
+        "seats": 2,
+        "status": "사용중",
+        "reserved_by": "김민수",
+        "time": "18:00-19:30",
+    },
+    {
+        "table_id": 2,
+        "seats": 2,
+        "status": "예약됨",
+        "reserved_by": "이서연",
+        "time": "19:00-20:30",
+    },
+    {
+        "table_id": 3,
+        "seats": 4,
+        "status": "사용중",
+        "reserved_by": "박지훈",
+        "time": "18:30-20:00",
+    },
     {"table_id": 4, "seats": 4, "status": "빈자리", "reserved_by": None, "time": None},
-    {"table_id": 5, "seats": 4, "status": "사용중", "reserved_by": "최유진", "time": "17:30-19:00"},
+    {
+        "table_id": 5,
+        "seats": 4,
+        "status": "사용중",
+        "reserved_by": "최유진",
+        "time": "17:30-19:00",
+    },
     {"table_id": 6, "seats": 6, "status": "빈자리", "reserved_by": None, "time": None},
-    {"table_id": 7, "seats": 6, "status": "사용중", "reserved_by": "정도현", "time": "18:00-19:30"},
-    {"table_id": 8, "seats": 8, "status": "예약됨", "reserved_by": "한소희", "time": "20:00-21:30"},
+    {
+        "table_id": 7,
+        "seats": 6,
+        "status": "사용중",
+        "reserved_by": "정도현",
+        "time": "18:00-19:30",
+    },
+    {
+        "table_id": 8,
+        "seats": 8,
+        "status": "예약됨",
+        "reserved_by": "한소희",
+        "time": "20:00-21:30",
+    },
     {"table_id": 9, "seats": 8, "status": "빈자리", "reserved_by": None, "time": None},
-    {"table_id": 10, "seats": 10, "status": "사용중", "reserved_by": "강현우", "time": "18:00-20:00"},
+    {
+        "table_id": 10,
+        "seats": 10,
+        "status": "사용중",
+        "reserved_by": "강현우",
+        "time": "18:00-20:00",
+    },
 ]
 
 
@@ -218,10 +351,14 @@ def get_available_tables(context: UserAccountContext, party_size: int) -> str:
     Args:
         party_size: Number of guests in the party
     """
-    suitable = [t for t in TABLES if t["status"] == "빈자리" and t["seats"] >= party_size]
+    suitable = [
+        t for t in TABLES if t["status"] == "빈자리" and t["seats"] >= party_size
+    ]
 
     if not suitable:
-        almost = [t for t in TABLES if t["status"] == "예약됨" or t["status"] == "사용중"]
+        almost = [
+            t for t in TABLES if t["status"] == "예약됨" or t["status"] == "사용중"
+        ]
         ending_soon = [t for t in almost if t["time"] and t["status"] == "사용중"]
         if ending_soon:
             soonest = ending_soon[0]
@@ -349,11 +486,15 @@ def lookup_discount_policy(context: UserAccountContext, situation: str) -> str:
         """.strip()
 
     available = ", ".join(DISCOUNT_POLICY.keys())
-    return f"❌ '{situation}' 상황을 찾을 수 없습니다.\n📋 조회 가능한 상황: {available}"
+    return (
+        f"❌ '{situation}' 상황을 찾을 수 없습니다.\n📋 조회 가능한 상황: {available}"
+    )
 
 
 @function_tool
-def escalate_to_manager(context: UserAccountContext, issue_summary: str, severity: str) -> str:
+def escalate_to_manager(
+    context: UserAccountContext, issue_summary: str, severity: str
+) -> str:
     """
     Escalate a serious complaint to the restaurant manager for direct handling.
     Use this for severe issues like allergy incidents, repeated complaints, or when the customer demands to speak with a manager.
