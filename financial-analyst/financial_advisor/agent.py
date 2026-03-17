@@ -1,3 +1,4 @@
+from google.adk.tools import ToolContext
 from google.adk.agents import Agent
 from google.adk.tools.agent_tool import AgentTool
 from google.adk.models.lite_llm import LiteLlm
@@ -9,8 +10,26 @@ from .prompt import PROMPT
 MODEL = LiteLlm("openai/gpt-4o")
 
 
-def save_advice_report():
-    pass
+def save_advice_report(tool_context: ToolContext, summary: str):
+    state = tool_context.state
+    data_analyst_result = state.get("DataAnalyst_result")
+    financial_analyst_result = state.get("FinancialAnalyst_result")
+    news_analyst_result = state.get("NewsAnalyst_result")
+    report = f"""
+    # Execute Summary and Advice
+    {summary}
+
+    ## Data Analyst Report:
+    {data_analyst_result}
+
+    ## Financial Analyst Report:
+    {financial_analyst_result}
+
+    ## News Analyst Report:
+    {news_analyst_result}
+    """
+    state["report"] = report
+    return {"success": True}
 
 
 financial_advisor = Agent(

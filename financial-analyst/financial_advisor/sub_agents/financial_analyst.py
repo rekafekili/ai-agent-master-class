@@ -164,6 +164,7 @@ financial_analyst = Agent(
     Analyze the financial health and performance of companies using comprehensive financial statement data.
     Focus on key financial ratios, trends, and indicators that reveal the company's financial strength.
     """,
+    output_key="FinancialAnalyst_result",
     tools=[
         get_income_statement,
         get_balance_sheet,
