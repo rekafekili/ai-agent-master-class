@@ -5,18 +5,17 @@ from openai import OpenAI
 import asyncio
 import streamlit as st
 from agents import (
-    Runner,
     SQLiteSession,
-    function_tool,
-    RunContextWrapper,
     InputGuardrailTripwireTriggered,
     OutputGuardrailTripwireTriggered,
 )
-from agents.voice import AudioInput
+from agents.voice import AudioInput, VoicePipeline
 from models import UserAccountContext
 from my_agents.triage_agent import triage_agent
 import numpy as np
 import wave, io
+from workflow import CustomWorkflow
+import sounddevice as sd
 
 client = OpenAI()
 
@@ -50,20 +49,26 @@ def convert_audio(audio_input):
 
 
 async def run_agent(audio_input):
-    status_container = st.status("⌛️ Processing voice message...")
     with st.chat_message("ai"):
+        status_container = st.status("⌛️ Processing voice message...")
         try:
             # turn audio into a numpy array
             audio_array = convert_audio(audio_input)
             audio = AudioInput(buffer=audio_array)
             # create custom workflow.
+            workflow = CustomWorkflow(context=user_account_ctx)
             # create the pipeline
-            stream = Runner.run_streamed(
-                st.session_state["agent"],
-                message,
-                session=session,
-                context=user_account_ctx,
-            )
+            pipline = VoicePipeline(workflow=workflow)
+            status_container.update(label="Running workflow", state="running")
+            result = await pipline.run(audio)
+
+            player = sd.OutputStream(samplerate=24000, channels=1, dtype=np.int16)
+            player.start()
+
+            async for event in result.stream():
+                if event.type == "voice_stream_event_audio":
+                    player.write(event.data)
+
         except InputGuardrailTripwireTriggered:
             st.write("I can't help you with that.")
         except OutputGuardrailTripwireTriggered:
@@ -75,7 +80,7 @@ audio_input = st.audio_input("Record your message")
 if audio_input:
     with st.chat_message("human"):
         st.audio(audio_input)
-    # asyncio.run(run_agent(message))
+    asyncio.run(run_agent(audio_input))
 
 
 with st.sidebar:
