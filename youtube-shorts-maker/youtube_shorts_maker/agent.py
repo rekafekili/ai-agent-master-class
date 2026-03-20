@@ -3,6 +3,7 @@ from google.adk.tools.agent_tool import AgentTool
 from google.adk.models.lite_llm import LiteLlm
 from .prompt import SHORTS_PRODUCER_DESCRIPTION, SHORTS_PRODUCER_PROMPT
 from .sub_agents.content_planner.agent import content_planner_agent
+from .sub_agents.asset_generator.agent import asset_generator_agent
 
 MODEL = LiteLlm(model="openai/gpt-4o")
 
@@ -13,6 +14,7 @@ shorts_producer_agent = Agent(
     model=MODEL,
     tools=[
         AgentTool(agent=content_planner_agent),
+        AgentTool(agent=asset_generator_agent),
     ],
 )
 
