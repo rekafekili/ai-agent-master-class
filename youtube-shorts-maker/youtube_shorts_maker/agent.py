@@ -2,7 +2,7 @@ from google.adk.agents import Agent
 from google.adk.tools.agent_tool import AgentTool
 from google.adk.models.lite_llm import LiteLlm
 from .prompt import SHORTS_PRODUCER_DESCRIPTION, SHORTS_PRODUCER_PROMPT
-from .sub_agents.content_planner_agent.agent import content_planner_agent
+from .sub_agents.content_planner.agent import content_planner_agent
 
 MODEL = LiteLlm(model="openai/gpt-4o")
 
