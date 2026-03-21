@@ -60,8 +60,8 @@ async def generate_images(tool_context: ToolContext):
             }
         )
 
-        return {
-            "total_images": len(generated_images),
-            "generated_images": generated_images,
-            "status": "complete",
-        }
+    return {
+        "total_images": len(generated_images),
+        "generated_images": generated_images,
+        "status": "complete",
+    }
