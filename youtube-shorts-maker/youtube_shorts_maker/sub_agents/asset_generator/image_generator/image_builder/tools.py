@@ -1,9 +1,11 @@
 from google.adk.tools.tool_context import ToolContext
 from openai import OpenAI
-import base64
+from google import genai
+import base64, io
 from google.genai import types
 
 client = OpenAI()
+# client = genai.Client()
 
 
 async def generate_images(tool_context: ToolContext):
@@ -37,6 +39,7 @@ async def generate_images(tool_context: ToolContext):
             output_format="jpeg",
             background="opaque",
             size="1024x1536",
+            quality="low",
         )
 
         image_bytes = base64.b64decode(image.data[0].b64_json)
@@ -51,6 +54,37 @@ async def generate_images(tool_context: ToolContext):
             filename=filename,
             artifact=artifact,
         )
+
+        # result = client.models.generate_images(
+        #     model="gemini-2.5-flash-image",
+        #     prompt=enhanced_prompt,
+        #     config=types.GenerateImagesConfig(
+        #         number_of_images=1,
+        #         output_mime_type="image/jpeg",
+        #         aspect_ratio="9:16",
+        #     ),
+        # )
+
+        # if result.generated_images:
+        #     # SDK가 반환한 PIL Image 객체
+        #     image = result.generated_images[0]
+
+        #     # PIL Image -> raw bytes
+        #     buffered = io.BytesIO()
+        #     image.image.save(buffered, format="JPEG")
+        #     image_bytes = buffered.getvalue()
+
+        #     # types.Part
+        #     artifact = types.Part.from_bytes(
+        #         data=image_bytes,
+        #         mime_type="image/jpeg",
+        #     )
+
+        #     # save
+        #     await tool_context.save_artifact(
+        #         filename=filename,
+        #         artifact=artifact,
+        #     )
 
         generated_images.append(
             {
