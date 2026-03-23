@@ -1,0 +1,2337 @@
+{
+  "eval_set_result_id": "travel_advisor_agent_TravelEval_1774276377.504937",
+  "eval_set_result_name": "travel_advisor_agent_TravelEval_1774276377.504937",
+  "eval_set_id": "TravelEval",
+  "eval_case_results": [
+    {
+      "eval_set_file": "TravelEval",
+      "eval_set_id": "TravelEval",
+      "eval_id": "TokyoAugust",
+      "final_eval_status": 1,
+      "eval_metric_results": null,
+      "overall_eval_metric_results": [
+        {
+          "metric_name": "tool_trajectory_avg_score",
+          "threshold": 0.5,
+          "criterion": null,
+          "custom_function_path": null,
+          "score": 0.6666666666666666,
+          "eval_status": 1,
+          "details": {
+            "rubric_scores": null
+          }
+        },
+        {
+          "metric_name": "response_match_score",
+          "threshold": 0.5,
+          "criterion": null,
+          "custom_function_path": null,
+          "score": 0.7315761996390268,
+          "eval_status": 1,
+          "details": {
+            "rubric_scores": null
+          }
+        }
+      ],
+      "eval_metric_result_per_invocation": [
+        {
+          "actual_invocation": {
+            "invocation_id": "e-2aee0bc5-a5b9-4782-8d56-bf0aca8d653b",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Hi",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Hello! How can I assist you with your travel plans today?",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "intermediate_data": {
+              "invocation_events": []
+            },
+            "creation_timestamp": 1774276362.651744,
+            "rubrics": null,
+            "app_details": {
+              "agent_details": {
+                "TravelAdvisorAgent": {
+                  "name": "TravelAdvisorAgent",
+                  "instructions": "\nYou are a helpful travel advisor agent that assists users with questions about locations and travel planning.\n\nYou have access to the following tools:\n1. **get_weather** - Get current weather information for any location\n2. **get_exchange_rate** - Convert currencies and get exchange rates\n3. **get_local_attractions** - Find popular attractions and points of interest\n\nWhen users ask questions about a location, you should:\n- Provide relevant information using the appropriate tools\n- Be helpful and informative in your responses\n- Offer additional suggestions when relevant\n- Combine multiple tools when needed for comprehensive answers\n\nFor example:\n- If asked about visiting Paris, you might check the weather, suggest attractions, and provide currency exchange rates\n- If asked about weather, provide current conditions and the forecast\n- If asked about money/currency, provide exchange rates and practical conversion amounts\n\nAlways aim to be helpful, accurate, and provide practical travel advice based on the information from your tools.\n\n\nYou are an agent. Your internal name is \"TravelAdvisorAgent\". The description about you is \"Travel advisor agent that helps users with location-based questions, providing weather, currency exchange, and local attraction information.\".",
+                  "tool_declarations": [
+                    {
+                      "retrieval": null,
+                      "computer_use": null,
+                      "file_search": null,
+                      "google_search": null,
+                      "google_maps": null,
+                      "code_execution": null,
+                      "enterprise_web_search": null,
+                      "function_declarations": [
+                        {
+                          "description": "Get current weather information for a location.",
+                          "name": "get_weather",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "location": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "location"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": null,
+                          "response_json_schema": null,
+                          "behavior": null
+                        },
+                        {
+                          "description": "Get exchange rate between two currencies.\nArgs should always be from_currency str, to_currency str, amount flot\n",
+                          "name": "get_exchange_rate",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "from_currency": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "to_currency": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "amount": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "NUMBER"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "from_currency",
+                              "to_currency",
+                              "amount"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": null,
+                          "response_json_schema": null,
+                          "behavior": null
+                        },
+                        {
+                          "description": "Get popular attractions and points of interest for a location.",
+                          "name": "get_local_attractions",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "location": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "category": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": "all",
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "location"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": null,
+                          "response_json_schema": null,
+                          "behavior": null
+                        }
+                      ],
+                      "google_search_retrieval": null,
+                      "parallel_ai_search": null,
+                      "url_context": null,
+                      "mcp_servers": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "expected_invocation": {
+            "invocation_id": "e-875179e2-fc28-4a79-9327-f1f3224dc329",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Hi",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Hello! How can I assist you with your travel plans or location-based questions today?",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "intermediate_data": {
+              "tool_uses": [],
+              "tool_responses": [],
+              "intermediate_responses": []
+            },
+            "creation_timestamp": 1774275972.4520519,
+            "rubrics": null,
+            "app_details": null
+          },
+          "eval_metric_results": [
+            {
+              "metric_name": "tool_trajectory_avg_score",
+              "threshold": 0.5,
+              "criterion": null,
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            },
+            {
+              "metric_name": "response_match_score",
+              "threshold": 0.5,
+              "criterion": null,
+              "custom_function_path": null,
+              "score": 0.846153846153846,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            }
+          ]
+        },
+        {
+          "actual_invocation": {
+            "invocation_id": "e-1ce705df-cd04-4777-929e-e69d3175a293",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "I want to go to Tokyo in August",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "That sounds like an exciting trip! Tokyo is a vibrant city with plenty to see and do. Here's how I can assist you in planning your trip:\n\n1. **Weather Information**: Knowing the weather will help you pack appropriately.\n2. **Local Attractions**: I can suggest some must-see attractions in Tokyo.\n3. **Currency Exchange**: If you need information about converting your currency to Japanese Yen, I can help with that too.\n\nWhich of these would you like to know more about? Or is there anything specific you'd like help with?",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "intermediate_data": {
+              "invocation_events": []
+            },
+            "creation_timestamp": 1774276366.339828,
+            "rubrics": null,
+            "app_details": {
+              "agent_details": {
+                "TravelAdvisorAgent": {
+                  "name": "TravelAdvisorAgent",
+                  "instructions": "\nYou are a helpful travel advisor agent that assists users with questions about locations and travel planning.\n\nYou have access to the following tools:\n1. **get_weather** - Get current weather information for any location\n2. **get_exchange_rate** - Convert currencies and get exchange rates\n3. **get_local_attractions** - Find popular attractions and points of interest\n\nWhen users ask questions about a location, you should:\n- Provide relevant information using the appropriate tools\n- Be helpful and informative in your responses\n- Offer additional suggestions when relevant\n- Combine multiple tools when needed for comprehensive answers\n\nFor example:\n- If asked about visiting Paris, you might check the weather, suggest attractions, and provide currency exchange rates\n- If asked about weather, provide current conditions and the forecast\n- If asked about money/currency, provide exchange rates and practical conversion amounts\n\nAlways aim to be helpful, accurate, and provide practical travel advice based on the information from your tools.\n\n\nYou are an agent. Your internal name is \"TravelAdvisorAgent\". The description about you is \"Travel advisor agent that helps users with location-based questions, providing weather, currency exchange, and local attraction information.\".",
+                  "tool_declarations": [
+                    {
+                      "retrieval": null,
+                      "computer_use": null,
+                      "file_search": null,
+                      "google_search": null,
+                      "google_maps": null,
+                      "code_execution": null,
+                      "enterprise_web_search": null,
+                      "function_declarations": [
+                        {
+                          "description": "Get current weather information for a location.",
+                          "name": "get_weather",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "location": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "location"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": null,
+                          "response_json_schema": null,
+                          "behavior": null
+                        },
+                        {
+                          "description": "Get exchange rate between two currencies.\nArgs should always be from_currency str, to_currency str, amount flot\n",
+                          "name": "get_exchange_rate",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "from_currency": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "to_currency": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "amount": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "NUMBER"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "from_currency",
+                              "to_currency",
+                              "amount"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": null,
+                          "response_json_schema": null,
+                          "behavior": null
+                        },
+                        {
+                          "description": "Get popular attractions and points of interest for a location.",
+                          "name": "get_local_attractions",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "location": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "category": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": "all",
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "location"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": null,
+                          "response_json_schema": null,
+                          "behavior": null
+                        }
+                      ],
+                      "google_search_retrieval": null,
+                      "parallel_ai_search": null,
+                      "url_context": null,
+                      "mcp_servers": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "expected_invocation": {
+            "invocation_id": "e-04667067-cfbc-4a72-8e26-238fc0d5f35e",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "I want to go to Tokyo in August",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "That sounds like an exciting trip! To help you plan your visit to Tokyo in August, I can provide information on a few key aspects:\n\n1. **Weather**: Knowing what the weather is typically like in August can help with your packing and activity planning.\n2. **Local Attractions**: Suggestions for must-see places and activities in Tokyo.\n3. **Currency Exchange**: Help with converting your currency to Japanese yen (JPY).\n\nPlease let me know which information you'd like to start with or if you need assistance with all of them!",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "intermediate_data": {
+              "tool_uses": [],
+              "tool_responses": [],
+              "intermediate_responses": []
+            },
+            "creation_timestamp": 1774275984.48846,
+            "rubrics": null,
+            "app_details": null
+          },
+          "eval_metric_results": [
+            {
+              "metric_name": "tool_trajectory_avg_score",
+              "threshold": 0.5,
+              "criterion": null,
+              "custom_function_path": null,
+              "score": 1.0,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            },
+            {
+              "metric_name": "response_match_score",
+              "threshold": 0.5,
+              "criterion": null,
+              "custom_function_path": null,
+              "score": 0.6888888888888889,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            }
+          ]
+        },
+        {
+          "actual_invocation": {
+            "invocation_id": "e-de25fdb4-ed57-4738-bc70-6f49b0343ee3",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Yes",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Here's some useful information for your trip to Tokyo in August:\n\n### Weather\n- **Current Temperature**: 22°C\n- **Condition**: Partly cloudy\n- **Humidity**: 65%\n- **Wind**: 12 km/h\n- **Forecast**: Mild weather with occasional clouds expected throughout the day.\n\nAugust in Tokyo can be warm and humid, so be prepared for that, but it seems like the weather should be pleasant with some mild conditions during your visit.\n\n### Local Attractions\nHere are some must-see attractions in Tokyo:\n1. **Tokyo Tower**\n   - **Type**: Landmark\n   - **Rating**: 4.5\n   - **Description**: A communications and observation tower offering excellent views of the city.\n\n2. **Senso-ji**\n   - **Type**: Temple\n   - **Rating**: 4.6\n   - **Description**: An ancient Buddhist temple, one of Tokyo's most popular temples.\n\n3. **Shibuya Crossing**\n   - **Type**: Landmark\n   - **Rating**: 4.4\n   - **Description**: The busiest pedestrian crossing in the world and a symbol of Tokyo.\n\n4. **Meiji Shrine**\n   - **Type**: Shrine\n   - **Rating**: 4.7\n   - **Description**: A peaceful Shinto shrine dedicated to Emperor Meiji, surrounded by beautiful forests.\n\n5. **Tokyo Skytree**\n   - **Type**: Tower\n   - **Rating**: 4.6\n   - **Description**: A broadcasting and observation tower with breathtaking panoramic views.\n\nIf you need further information on currency exchange or anything else, feel free to ask!",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "intermediate_data": {
+              "invocation_events": [
+                {
+                  "author": "TravelAdvisorAgent",
+                  "content": {
+                    "parts": [
+                      {
+                        "media_resolution": null,
+                        "code_execution_result": null,
+                        "executable_code": null,
+                        "file_data": null,
+                        "function_call": {
+                          "id": "call_AtNSykQgmfOMtrgn0pD7ets1",
+                          "args": {
+                            "location": "Tokyo"
+                          },
+                          "name": "get_weather",
+                          "partial_args": null,
+                          "will_continue": null
+                        },
+                        "function_response": null,
+                        "inline_data": null,
+                        "text": null,
+                        "thought": null,
+                        "thought_signature": null,
+                        "video_metadata": null,
+                        "tool_call": null,
+                        "tool_response": null
+                      },
+                      {
+                        "media_resolution": null,
+                        "code_execution_result": null,
+                        "executable_code": null,
+                        "file_data": null,
+                        "function_call": {
+                          "id": "call_w6pJWQQsVpyIFbBqIRfkF7kO",
+                          "args": {
+                            "location": "Tokyo"
+                          },
+                          "name": "get_local_attractions",
+                          "partial_args": null,
+                          "will_continue": null
+                        },
+                        "function_response": null,
+                        "inline_data": null,
+                        "text": null,
+                        "thought": null,
+                        "thought_signature": null,
+                        "video_metadata": null,
+                        "tool_call": null,
+                        "tool_response": null
+                      }
+                    ],
+                    "role": "model"
+                  }
+                },
+                {
+                  "author": "TravelAdvisorAgent",
+                  "content": {
+                    "parts": [
+                      {
+                        "media_resolution": null,
+                        "code_execution_result": null,
+                        "executable_code": null,
+                        "file_data": null,
+                        "function_call": null,
+                        "function_response": {
+                          "will_continue": null,
+                          "scheduling": null,
+                          "parts": null,
+                          "id": "call_AtNSykQgmfOMtrgn0pD7ets1",
+                          "name": "get_weather",
+                          "response": {
+                            "location": "Tokyo",
+                            "temperature": "22°C",
+                            "condition": "Partly cloudy",
+                            "humidity": "65%",
+                            "wind": "12 km/h",
+                            "forecast": "Mild weather with occasional clouds expected throughout the day"
+                          }
+                        },
+                        "inline_data": null,
+                        "text": null,
+                        "thought": null,
+                        "thought_signature": null,
+                        "video_metadata": null,
+                        "tool_call": null,
+                        "tool_response": null
+                      },
+                      {
+                        "media_resolution": null,
+                        "code_execution_result": null,
+                        "executable_code": null,
+                        "file_data": null,
+                        "function_call": null,
+                        "function_response": {
+                          "will_continue": null,
+                          "scheduling": null,
+                          "parts": null,
+                          "id": "call_w6pJWQQsVpyIFbBqIRfkF7kO",
+                          "name": "get_local_attractions",
+                          "response": {
+                            "location": "Tokyo",
+                            "category": "all",
+                            "attractions": [
+                              {
+                                "name": "Tokyo Tower",
+                                "type": "landmark",
+                                "rating": 4.5,
+                                "description": "Communications and observation tower"
+                              },
+                              {
+                                "name": "Senso-ji",
+                                "type": "temple",
+                                "rating": 4.6,
+                                "description": "Ancient Buddhist temple"
+                              },
+                              {
+                                "name": "Shibuya Crossing",
+                                "type": "landmark",
+                                "rating": 4.4,
+                                "description": "Busiest pedestrian crossing"
+                              },
+                              {
+                                "name": "Meiji Shrine",
+                                "type": "shrine",
+                                "rating": 4.7,
+                                "description": "Shinto shrine dedicated to Emperor Meiji"
+                              },
+                              {
+                                "name": "Tokyo Skytree",
+                                "type": "tower",
+                                "rating": 4.6,
+                                "description": "Broadcasting and observation tower"
+                              }
+                            ],
+                            "total_count": 5
+                          }
+                        },
+                        "inline_data": null,
+                        "text": null,
+                        "thought": null,
+                        "thought_signature": null,
+                        "video_metadata": null,
+                        "tool_call": null,
+                        "tool_response": null
+                      }
+                    ],
+                    "role": "user"
+                  }
+                }
+              ]
+            },
+            "creation_timestamp": 1774276368.683084,
+            "rubrics": null,
+            "app_details": {
+              "agent_details": {
+                "TravelAdvisorAgent": {
+                  "name": "TravelAdvisorAgent",
+                  "instructions": "\nYou are a helpful travel advisor agent that assists users with questions about locations and travel planning.\n\nYou have access to the following tools:\n1. **get_weather** - Get current weather information for any location\n2. **get_exchange_rate** - Convert currencies and get exchange rates\n3. **get_local_attractions** - Find popular attractions and points of interest\n\nWhen users ask questions about a location, you should:\n- Provide relevant information using the appropriate tools\n- Be helpful and informative in your responses\n- Offer additional suggestions when relevant\n- Combine multiple tools when needed for comprehensive answers\n\nFor example:\n- If asked about visiting Paris, you might check the weather, suggest attractions, and provide currency exchange rates\n- If asked about weather, provide current conditions and the forecast\n- If asked about money/currency, provide exchange rates and practical conversion amounts\n\nAlways aim to be helpful, accurate, and provide practical travel advice based on the information from your tools.\n\n\nYou are an agent. Your internal name is \"TravelAdvisorAgent\". The description about you is \"Travel advisor agent that helps users with location-based questions, providing weather, currency exchange, and local attraction information.\".",
+                  "tool_declarations": [
+                    {
+                      "retrieval": null,
+                      "computer_use": null,
+                      "file_search": null,
+                      "google_search": null,
+                      "google_maps": null,
+                      "code_execution": null,
+                      "enterprise_web_search": null,
+                      "function_declarations": [
+                        {
+                          "description": "Get current weather information for a location.",
+                          "name": "get_weather",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "location": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "location"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": null,
+                          "response_json_schema": null,
+                          "behavior": null
+                        },
+                        {
+                          "description": "Get exchange rate between two currencies.\nArgs should always be from_currency str, to_currency str, amount flot\n",
+                          "name": "get_exchange_rate",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "from_currency": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "to_currency": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "amount": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "NUMBER"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "from_currency",
+                              "to_currency",
+                              "amount"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": null,
+                          "response_json_schema": null,
+                          "behavior": null
+                        },
+                        {
+                          "description": "Get popular attractions and points of interest for a location.",
+                          "name": "get_local_attractions",
+                          "parameters": {
+                            "additional_properties": null,
+                            "defs": null,
+                            "ref": null,
+                            "any_of": null,
+                            "default": null,
+                            "description": null,
+                            "enum": null,
+                            "example": null,
+                            "format": null,
+                            "items": null,
+                            "max_items": null,
+                            "max_length": null,
+                            "max_properties": null,
+                            "maximum": null,
+                            "min_items": null,
+                            "min_length": null,
+                            "min_properties": null,
+                            "minimum": null,
+                            "nullable": null,
+                            "pattern": null,
+                            "properties": {
+                              "location": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": null,
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              },
+                              "category": {
+                                "additional_properties": null,
+                                "defs": null,
+                                "ref": null,
+                                "any_of": null,
+                                "default": "all",
+                                "description": null,
+                                "enum": null,
+                                "example": null,
+                                "format": null,
+                                "items": null,
+                                "max_items": null,
+                                "max_length": null,
+                                "max_properties": null,
+                                "maximum": null,
+                                "min_items": null,
+                                "min_length": null,
+                                "min_properties": null,
+                                "minimum": null,
+                                "nullable": null,
+                                "pattern": null,
+                                "properties": null,
+                                "property_ordering": null,
+                                "required": null,
+                                "title": null,
+                                "type": "STRING"
+                              }
+                            },
+                            "property_ordering": null,
+                            "required": [
+                              "location"
+                            ],
+                            "title": null,
+                            "type": "OBJECT"
+                          },
+                          "parameters_json_schema": null,
+                          "response": null,
+                          "response_json_schema": null,
+                          "behavior": null
+                        }
+                      ],
+                      "google_search_retrieval": null,
+                      "parallel_ai_search": null,
+                      "url_context": null,
+                      "mcp_servers": null
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "expected_invocation": {
+            "invocation_id": "e-cefccaaa-633f-4829-a902-2b8738fe4fef",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Yes",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Here's some helpful information for your upcoming trip to Tokyo in August:\n\n### Weather in Tokyo:\n- **Current Temperature**: 22°C\n- **Condition**: Partly cloudy\n- **Humidity**: 65%\n- **Wind**: 12 km/h\n- **Forecast**: Mild weather with occasional clouds expected throughout the day. August is usually warm and humid, so be prepared for hot weather and occasional rain showers.\n\n### Local Attractions in Tokyo:\n1. **Tokyo Tower**: A famous communications and observation tower. Perfect for panoramic views of the city.\n2. **Senso-ji**: An ancient Buddhist temple, great for experiencing traditional Japanese culture.\n3. **Shibuya Crossing**: Known as the busiest pedestrian crossing, an iconic spot to experience the hustle and bustle of Tokyo.\n4. **Meiji Shrine**: A Shinto shrine dedicated to Emperor Meiji, set in a beautiful forested area.\n5. **Tokyo Skytree**: A broadcasting and observation tower offering stunning views.\n\n### Currency Exchange:\n- **Exchange Rate**: 1 USD = 149.5 JPY\n\nThis rate means if you exchange 1 USD, you'll receive 149.5 Japanese Yen. Be sure to check the exchange rate closer to your travel date, as it can fluctuate.\n\nIf you have any more questions or need further assistance with your itinerary, feel free to ask!",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "intermediate_data": {
+              "invocation_events": [
+                {
+                  "author": "TravelAdvisorAgent",
+                  "content": {
+                    "parts": [
+                      {
+                        "media_resolution": null,
+                        "code_execution_result": null,
+                        "executable_code": null,
+                        "file_data": null,
+                        "function_call": {
+                          "id": "call_oalD0yUyaaMs5ehXUYnaEprM",
+                          "args": {
+                            "location": "Tokyo"
+                          },
+                          "name": "get_weather",
+                          "partial_args": null,
+                          "will_continue": null
+                        },
+                        "function_response": null,
+                        "inline_data": null,
+                        "text": null,
+                        "thought": null,
+                        "thought_signature": null,
+                        "video_metadata": null,
+                        "tool_call": null,
+                        "tool_response": null
+                      },
+                      {
+                        "media_resolution": null,
+                        "code_execution_result": null,
+                        "executable_code": null,
+                        "file_data": null,
+                        "function_call": {
+                          "id": "call_vtLpsZmTOxDrrz3vRDKM7p3i",
+                          "args": {
+                            "location": "Tokyo"
+                          },
+                          "name": "get_local_attractions",
+                          "partial_args": null,
+                          "will_continue": null
+                        },
+                        "function_response": null,
+                        "inline_data": null,
+                        "text": null,
+                        "thought": null,
+                        "thought_signature": null,
+                        "video_metadata": null,
+                        "tool_call": null,
+                        "tool_response": null
+                      },
+                      {
+                        "media_resolution": null,
+                        "code_execution_result": null,
+                        "executable_code": null,
+                        "file_data": null,
+                        "function_call": {
+                          "id": "call_JYUA5jUyQp9C99jN7kMLsUPX",
+                          "args": {
+                            "from_currency": "USD",
+                            "to_currency": "JPY",
+                            "amount": 1
+                          },
+                          "name": "get_exchange_rate",
+                          "partial_args": null,
+                          "will_continue": null
+                        },
+                        "function_response": null,
+                        "inline_data": null,
+                        "text": null,
+                        "thought": null,
+                        "thought_signature": null,
+                        "video_metadata": null,
+                        "tool_call": null,
+                        "tool_response": null
+                      }
+                    ],
+                    "role": "model"
+                  }
+                },
+                {
+                  "author": "TravelAdvisorAgent",
+                  "content": {
+                    "parts": [
+                      {
+                        "media_resolution": null,
+                        "code_execution_result": null,
+                        "executable_code": null,
+                        "file_data": null,
+                        "function_call": null,
+                        "function_response": {
+                          "will_continue": null,
+                          "scheduling": null,
+                          "parts": null,
+                          "id": "call_oalD0yUyaaMs5ehXUYnaEprM",
+                          "name": "get_weather",
+                          "response": {
+                            "location": "Tokyo",
+                            "temperature": "22°C",
+                            "condition": "Partly cloudy",
+                            "humidity": "65%",
+                            "wind": "12 km/h",
+                            "forecast": "Mild weather with occasional clouds expected throughout the day"
+                          }
+                        },
+                        "inline_data": null,
+                        "text": null,
+                        "thought": null,
+                        "thought_signature": null,
+                        "video_metadata": null,
+                        "tool_call": null,
+                        "tool_response": null
+                      },
+                      {
+                        "media_resolution": null,
+                        "code_execution_result": null,
+                        "executable_code": null,
+                        "file_data": null,
+                        "function_call": null,
+                        "function_response": {
+                          "will_continue": null,
+                          "scheduling": null,
+                          "parts": null,
+                          "id": "call_vtLpsZmTOxDrrz3vRDKM7p3i",
+                          "name": "get_local_attractions",
+                          "response": {
+                            "location": "Tokyo",
+                            "category": "all",
+                            "attractions": [
+                              {
+                                "name": "Tokyo Tower",
+                                "type": "landmark",
+                                "rating": 4.5,
+                                "description": "Communications and observation tower"
+                              },
+                              {
+                                "name": "Senso-ji",
+                                "type": "temple",
+                                "rating": 4.6,
+                                "description": "Ancient Buddhist temple"
+                              },
+                              {
+                                "name": "Shibuya Crossing",
+                                "type": "landmark",
+                                "rating": 4.4,
+                                "description": "Busiest pedestrian crossing"
+                              },
+                              {
+                                "name": "Meiji Shrine",
+                                "type": "shrine",
+                                "rating": 4.7,
+                                "description": "Shinto shrine dedicated to Emperor Meiji"
+                              },
+                              {
+                                "name": "Tokyo Skytree",
+                                "type": "tower",
+                                "rating": 4.6,
+                                "description": "Broadcasting and observation tower"
+                              }
+                            ],
+                            "total_count": 5
+                          }
+                        },
+                        "inline_data": null,
+                        "text": null,
+                        "thought": null,
+                        "thought_signature": null,
+                        "video_metadata": null,
+                        "tool_call": null,
+                        "tool_response": null
+                      },
+                      {
+                        "media_resolution": null,
+                        "code_execution_result": null,
+                        "executable_code": null,
+                        "file_data": null,
+                        "function_call": null,
+                        "function_response": {
+                          "will_continue": null,
+                          "scheduling": null,
+                          "parts": null,
+                          "id": "call_JYUA5jUyQp9C99jN7kMLsUPX",
+                          "name": "get_exchange_rate",
+                          "response": {
+                            "from_currency": "USD",
+                            "to_currency": "JPY",
+                            "amount": 1,
+                            "exchange_rate": 149.5,
+                            "converted_amount": 149.5,
+                            "timestamp": "2024-03-15 10:30:00 UTC"
+                          }
+                        },
+                        "inline_data": null,
+                        "text": null,
+                        "thought": null,
+                        "thought_signature": null,
+                        "video_metadata": null,
+                        "tool_call": null,
+                        "tool_response": null
+                      }
+                    ],
+                    "role": "user"
+                  }
+                }
+              ]
+            },
+            "creation_timestamp": 1774275991.435234,
+            "rubrics": null,
+            "app_details": null
+          },
+          "eval_metric_results": [
+            {
+              "metric_name": "tool_trajectory_avg_score",
+              "threshold": 0.5,
+              "criterion": null,
+              "custom_function_path": null,
+              "score": 0.0,
+              "eval_status": 2,
+              "details": {
+                "rubric_scores": null
+              }
+            },
+            {
+              "metric_name": "response_match_score",
+              "threshold": 0.5,
+              "criterion": null,
+              "custom_function_path": null,
+              "score": 0.6596858638743456,
+              "eval_status": 1,
+              "details": {
+                "rubric_scores": null
+              }
+            }
+          ]
+        }
+      ],
+      "session_id": "___eval___session___a5ce6846-e9ad-47e0-9315-a99f897eb23b",
+      "session_details": {
+        "id": "___eval___session___a5ce6846-e9ad-47e0-9315-a99f897eb23b",
+        "app_name": "travel_advisor_agent",
+        "user_id": "user",
+        "state": {
+          "__llm_request_key__": "9474568b-0eac-4133-85f4-6f187f5da016"
+        },
+        "events": [
+          {
+            "model_version": null,
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Hi",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": null,
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": null,
+            "usage_metadata": null,
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-2aee0bc5-a5b9-4782-8d56-bf0aca8d653b",
+            "author": "user",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {},
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "15241f39-5238-4b80-8a78-17f768a6be3d",
+            "timestamp": 1774276361.0090399
+          },
+          {
+            "model_version": "gpt-4o-2024-08-06",
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Hello! How can I assist you with your travel plans today?",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "grounding_metadata": null,
+            "partial": false,
+            "turn_complete": null,
+            "finish_reason": "STOP",
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": {
+              "__llm_request_key__": "016fe9e0-f006-4e4d-af72-db22d3295607"
+            },
+            "usage_metadata": {
+              "cache_tokens_details": null,
+              "cached_content_token_count": 0,
+              "candidates_token_count": 14,
+              "candidates_tokens_details": null,
+              "prompt_token_count": 369,
+              "prompt_tokens_details": null,
+              "thoughts_token_count": null,
+              "tool_use_prompt_token_count": null,
+              "tool_use_prompt_tokens_details": null,
+              "total_token_count": 383,
+              "traffic_type": null
+            },
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-2aee0bc5-a5b9-4782-8d56-bf0aca8d653b",
+            "author": "TravelAdvisorAgent",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {
+                "__llm_request_key__": "016fe9e0-f006-4e4d-af72-db22d3295607"
+              },
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "8ab2ad8f-709c-4923-a7ab-7279354af6db",
+            "timestamp": 1774276361.012345
+          },
+          {
+            "model_version": null,
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "I want to go to Tokyo in August",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": null,
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": null,
+            "usage_metadata": null,
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-1ce705df-cd04-4777-929e-e69d3175a293",
+            "author": "user",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {},
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "a9d3a952-7131-4607-ae23-9f4e91d233b3",
+            "timestamp": 1774276362.6536582
+          },
+          {
+            "model_version": "gpt-4o-2024-08-06",
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "That sounds like an exciting trip! Tokyo is a vibrant city with plenty to see and do. Here's how I can assist you in planning your trip:\n\n1. **Weather Information**: Knowing the weather will help you pack appropriately.\n2. **Local Attractions**: I can suggest some must-see attractions in Tokyo.\n3. **Currency Exchange**: If you need information about converting your currency to Japanese Yen, I can help with that too.\n\nWhich of these would you like to know more about? Or is there anything specific you'd like help with?",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "grounding_metadata": null,
+            "partial": false,
+            "turn_complete": null,
+            "finish_reason": "STOP",
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": {
+              "__llm_request_key__": "59c645b2-d75a-4d13-bd45-2d08c4149b6e"
+            },
+            "usage_metadata": {
+              "cache_tokens_details": null,
+              "cached_content_token_count": 0,
+              "candidates_token_count": 111,
+              "candidates_tokens_details": null,
+              "prompt_token_count": 398,
+              "prompt_tokens_details": null,
+              "thoughts_token_count": null,
+              "tool_use_prompt_token_count": null,
+              "tool_use_prompt_tokens_details": null,
+              "total_token_count": 509,
+              "traffic_type": null
+            },
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-1ce705df-cd04-4777-929e-e69d3175a293",
+            "author": "TravelAdvisorAgent",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {
+                "__llm_request_key__": "59c645b2-d75a-4d13-bd45-2d08c4149b6e"
+              },
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "76032135-e43d-4006-84df-5d9820f3d6bf",
+            "timestamp": 1774276362.656436
+          },
+          {
+            "model_version": null,
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Yes",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": null,
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": null,
+            "usage_metadata": null,
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-de25fdb4-ed57-4738-bc70-6f49b0343ee3",
+            "author": "user",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {},
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "26e39040-2f80-425d-9e1f-993ba92d8975",
+            "timestamp": 1774276366.341936
+          },
+          {
+            "model_version": "gpt-4o-2024-08-06",
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": {
+                    "id": "call_AtNSykQgmfOMtrgn0pD7ets1",
+                    "args": {
+                      "location": "Tokyo"
+                    },
+                    "name": "get_weather",
+                    "partial_args": null,
+                    "will_continue": null
+                  },
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": null,
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                },
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": {
+                    "id": "call_w6pJWQQsVpyIFbBqIRfkF7kO",
+                    "args": {
+                      "location": "Tokyo"
+                    },
+                    "name": "get_local_attractions",
+                    "partial_args": null,
+                    "will_continue": null
+                  },
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": null,
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "grounding_metadata": null,
+            "partial": false,
+            "turn_complete": null,
+            "finish_reason": "STOP",
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": {
+              "__llm_request_key__": "88e77fea-df64-4498-90f7-9c2a9c1e64c2"
+            },
+            "usage_metadata": {
+              "cache_tokens_details": null,
+              "cached_content_token_count": 0,
+              "candidates_token_count": 46,
+              "candidates_tokens_details": null,
+              "prompt_token_count": 517,
+              "prompt_tokens_details": null,
+              "thoughts_token_count": null,
+              "tool_use_prompt_token_count": null,
+              "tool_use_prompt_tokens_details": null,
+              "total_token_count": 563,
+              "traffic_type": null
+            },
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-de25fdb4-ed57-4738-bc70-6f49b0343ee3",
+            "author": "TravelAdvisorAgent",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {
+                "__llm_request_key__": "88e77fea-df64-4498-90f7-9c2a9c1e64c2"
+              },
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": [],
+            "branch": null,
+            "id": "2ec2fb1d-06e1-4736-b6f7-b691c4afe813",
+            "timestamp": 1774276366.344476
+          },
+          {
+            "model_version": null,
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": {
+                    "will_continue": null,
+                    "scheduling": null,
+                    "parts": null,
+                    "id": "call_AtNSykQgmfOMtrgn0pD7ets1",
+                    "name": "get_weather",
+                    "response": {
+                      "location": "Tokyo",
+                      "temperature": "22°C",
+                      "condition": "Partly cloudy",
+                      "humidity": "65%",
+                      "wind": "12 km/h",
+                      "forecast": "Mild weather with occasional clouds expected throughout the day"
+                    }
+                  },
+                  "inline_data": null,
+                  "text": null,
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                },
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": {
+                    "will_continue": null,
+                    "scheduling": null,
+                    "parts": null,
+                    "id": "call_w6pJWQQsVpyIFbBqIRfkF7kO",
+                    "name": "get_local_attractions",
+                    "response": {
+                      "location": "Tokyo",
+                      "category": "all",
+                      "attractions": [
+                        {
+                          "name": "Tokyo Tower",
+                          "type": "landmark",
+                          "rating": 4.5,
+                          "description": "Communications and observation tower"
+                        },
+                        {
+                          "name": "Senso-ji",
+                          "type": "temple",
+                          "rating": 4.6,
+                          "description": "Ancient Buddhist temple"
+                        },
+                        {
+                          "name": "Shibuya Crossing",
+                          "type": "landmark",
+                          "rating": 4.4,
+                          "description": "Busiest pedestrian crossing"
+                        },
+                        {
+                          "name": "Meiji Shrine",
+                          "type": "shrine",
+                          "rating": 4.7,
+                          "description": "Shinto shrine dedicated to Emperor Meiji"
+                        },
+                        {
+                          "name": "Tokyo Skytree",
+                          "type": "tower",
+                          "rating": 4.6,
+                          "description": "Broadcasting and observation tower"
+                        }
+                      ],
+                      "total_count": 5
+                    }
+                  },
+                  "inline_data": null,
+                  "text": null,
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "user"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": null,
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": null,
+            "usage_metadata": null,
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-de25fdb4-ed57-4738-bc70-6f49b0343ee3",
+            "author": "TravelAdvisorAgent",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {},
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "e620b295-7d15-4b9a-bc44-fa5302614798",
+            "timestamp": 1774276368.683386
+          },
+          {
+            "model_version": "gpt-4o-2024-08-06",
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "Here's some useful information for your trip to Tokyo in August:\n\n### Weather\n- **Current Temperature**: 22°C\n- **Condition**: Partly cloudy\n- **Humidity**: 65%\n- **Wind**: 12 km/h\n- **Forecast**: Mild weather with occasional clouds expected throughout the day.\n\nAugust in Tokyo can be warm and humid, so be prepared for that, but it seems like the weather should be pleasant with some mild conditions during your visit.\n\n### Local Attractions\nHere are some must-see attractions in Tokyo:\n1. **Tokyo Tower**\n   - **Type**: Landmark\n   - **Rating**: 4.5\n   - **Description**: A communications and observation tower offering excellent views of the city.\n\n2. **Senso-ji**\n   - **Type**: Temple\n   - **Rating**: 4.6\n   - **Description**: An ancient Buddhist temple, one of Tokyo's most popular temples.\n\n3. **Shibuya Crossing**\n   - **Type**: Landmark\n   - **Rating**: 4.4\n   - **Description**: The busiest pedestrian crossing in the world and a symbol of Tokyo.\n\n4. **Meiji Shrine**\n   - **Type**: Shrine\n   - **Rating**: 4.7\n   - **Description**: A peaceful Shinto shrine dedicated to Emperor Meiji, surrounded by beautiful forests.\n\n5. **Tokyo Skytree**\n   - **Type**: Tower\n   - **Rating**: 4.6\n   - **Description**: A broadcasting and observation tower with breathtaking panoramic views.\n\nIf you need further information on currency exchange or anything else, feel free to ask!",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null
+                }
+              ],
+              "role": "model"
+            },
+            "grounding_metadata": null,
+            "partial": false,
+            "turn_complete": null,
+            "finish_reason": "STOP",
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": {
+              "__llm_request_key__": "9474568b-0eac-4133-85f4-6f187f5da016"
+            },
+            "usage_metadata": {
+              "cache_tokens_details": null,
+              "cached_content_token_count": 0,
+              "candidates_token_count": 356,
+              "candidates_tokens_details": null,
+              "prompt_token_count": 816,
+              "prompt_tokens_details": null,
+              "thoughts_token_count": null,
+              "tool_use_prompt_token_count": null,
+              "tool_use_prompt_tokens_details": null,
+              "total_token_count": 1172,
+              "traffic_type": null
+            },
+            "live_session_resumption_update": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-de25fdb4-ed57-4738-bc70-6f49b0343ee3",
+            "author": "TravelAdvisorAgent",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {
+                "__llm_request_key__": "9474568b-0eac-4133-85f4-6f187f5da016"
+              },
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "b29f403b-dceb-488f-8172-9d1684c96bde",
+            "timestamp": 1774276368.685998
+          }
+        ],
+        "last_update_time": 1774276368.685998
+      },
+      "user_id": "user"
+    }
+  ],
+  "creation_timestamp": 1774276377.504937
+}
