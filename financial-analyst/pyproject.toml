@@ -8,7 +8,6 @@ dependencies = [
     "firecrawl-py==2.16.3",
     "google-adk>=1.11.0",
     "google-genai>=1.31.0",
-    "litellm>=1.75.8",
     "python-dotenv>=1.1.1",
     "yfinance>=0.2.65",
 ]
