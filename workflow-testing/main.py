@@ -56,7 +56,3 @@ graph_builder.add_edge("assign_priority", "draft_response")
 graph_builder.add_edge("draft_response", END)
 
 graph = graph_builder.compile()
-
-result = graph.invoke({"email": "i need to talk yo you urgently"})
-
-print(result)
