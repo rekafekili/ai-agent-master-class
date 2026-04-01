@@ -1,11 +1,10 @@
 from langchain.chat_models import init_chat_model
-from langgraph.types import interrupt, Command
 from pydantic import BaseModel, Field
 
 from agent.db import get_connection, init_db, insert_vocabulary
 from agent.state import PaperState
 
-llm = init_chat_model("openai:gpt-4o")
+llm = init_chat_model("openai:gpt-4o-mini")
 
 
 class VocabularyEntry(BaseModel):
@@ -34,55 +33,32 @@ EXTRACT_PROMPT = """다음 학술 논문 텍스트에서 대학원생이 알아�
 """
 
 
-def extract_vocabulary(state: PaperState) -> PaperState:
-    """각 섹션에서 핵심 영어 단어를 추출하는 노드. (DB 저장은 하지 않음)"""
-    print("[extract_vocabulary] 노드 시작")
+def extract_section_vocab(state: dict) -> dict:
+    """Send API로 전달받은 단일 섹션에서 핵심 영어 단어를 추출하는 노드."""
     paper_id = state["paper_id"]
-    sections = state["sections"]
-    total = len(sections)
-    print(f"[extract_vocabulary] 총 {total}개 섹션에서 단어 추출 예정")
+    section = state["section"]
+    heading = section["heading"]
+    section_index = section["section_index"]
 
-    all_entries = []
-    for i, s in enumerate(sections):
-        print(f"[extract_vocabulary] [{i + 1}/{total}] '{s['heading']}' 단어 추출 중...")
-        result = extractor.invoke(
-            EXTRACT_PROMPT.format(content=s["content"])
-        )
-        for entry in result.entries:
-            all_entries.append({
+    print(f"[extract_section_vocab] 섹션 '{heading}' 단어 추출 중...")
+
+    result = extractor.invoke(EXTRACT_PROMPT.format(content=section["content"]))
+
+    entries = []
+    for entry in result.entries:
+        entries.append(
+            {
                 "paper_id": paper_id,
-                "section_index": s["section_index"],
+                "section_index": section_index,
                 "word": entry.word,
                 "context_sentence": entry.context_sentence,
                 "meaning_ko": entry.meaning_ko,
                 "meaning_en": entry.meaning_en,
-            })
-        print(f"[extract_vocabulary] [{i + 1}/{total}] '{s['heading']}' 완료 — {len(result.entries)}개 단어")
+            }
+        )
 
-    print(f"[extract_vocabulary] 추출 완료 — 총 {len(all_entries)}개 단어")
-    return {"vocabulary": all_entries}
-
-
-def human_review(state: PaperState) -> Command:
-    """추출된 단어를 사용자에게 보여주고, 저장 여부를 interrupt로 입력받는 노드."""
-    print("[human_review] 노드 시작 — 사용자 입력 대기 중")
-    vocabulary = state["vocabulary"]
-
-    answer = interrupt({
-        "message": f"{len(vocabulary)}개 단어가 추출되었습니다. DB에 저장하시겠습니까?",
-        "vocabulary_preview": [
-            f"[섹션 {v['section_index']}] {v['word']} — {v['meaning_ko']}"
-            for v in vocabulary[:20]
-        ],
-        "instruction": "save=True로 저장, save=False로 건너뛰기",
-    })
-
-    if answer.get("save", False):
-        print("[human_review] 사용자 선택: 저장")
-        return Command(goto="save_vocabulary")
-    else:
-        print("[human_review] 사용자 선택: 건너뛰기")
-        return Command(goto="__end__")
+    print(f"[extract_section_vocab] 섹션 '{heading}' 완료 — {len(entries)}개 단어")
+    return {"vocabulary": entries}
 
 
 def save_vocabulary(state: PaperState) -> PaperState:
