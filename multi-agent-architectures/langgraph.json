@@ -1,0 +1,9 @@
+{
+    "dependencies": [
+        "./graph.py"
+    ],
+    "env": ".env",
+    "graphs": {
+        "mr_poet": "./graph.py:graph"
+    }
+}
