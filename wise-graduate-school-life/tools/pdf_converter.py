@@ -67,15 +67,22 @@ def _parse_pdf_to_markdown(file_path: str) -> tuple[str, str, list[dict]]:
                 if not text:
                     continue
 
-                # 폰트 크기로 heading 추정
+                # 폰트 크기 + 폰트명으로 heading 추정
                 max_size = max(s["size"] for s in spans)
                 is_bold = any(
-                    "bold" in s.get("font", "").lower() for s in spans
+                    "bold" in s.get("font", "").lower()
+                    or s.get("font", "").endswith("B")
+                    or s.get("font", "").endswith("TB")
+                    or s.get("font", "").endswith("BD")
+                    or (s.get("flags", 0) & 2 ** 4)  # PyMuPDF bold flag
+                    for s in spans
                 )
 
-                if max_size >= 14 and is_bold:
+                if max_size >= 14:
                     md_lines.append(f"\n## {text}\n")
-                elif max_size >= 12 and is_bold:
+                elif max_size >= 11 and is_bold:
+                    md_lines.append(f"\n### {text}\n")
+                elif max_size >= 10 and is_bold and len(text) < 80:
                     md_lines.append(f"\n### {text}\n")
                 else:
                     md_lines.append(text)
@@ -138,7 +145,7 @@ def _extract_figures(file_path: str, images_info: list[dict], paper_id: str) -> 
 
 _SKIP_SECTION_KEYWORDS = {"@", "university", "institute", "department", "college",
                           "school of", "permission to make", "copyright", "acm isbn",
-                          "doi.org", "corresponding author"}
+                          "doi.org", "corresponding author", "arxiv:"}
 _SKIP_HEADING_PATTERNS = {"ccs concepts", "acmreference format", "acm reference format"}
 
 
@@ -146,6 +153,8 @@ def _is_preamble_section(heading: str, content: str) -> bool:
     """본문 시작 전 메타/저자 정보 섹션인지 판별."""
     heading_lower = heading.lower().strip().rstrip(":")
     if heading_lower in _SKIP_HEADING_PATTERNS:
+        return True
+    if heading_lower.startswith("arxiv:"):
         return True
     content_lower = content.lower()
     return any(kw in content_lower for kw in _SKIP_SECTION_KEYWORDS)

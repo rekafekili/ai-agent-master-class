@@ -48,7 +48,7 @@ if st.session_state.analysis_done:
     total = len(sections)
     has_refs = bool(res["references"])
     total_pages = total + (1 if has_refs else 0)
-    idx = st.session_state.current_section
+    idx = st.session_state.current_section or 0
 
     # ── 상단: 논문 제목 + 네비게이션 ──
     st.markdown(
