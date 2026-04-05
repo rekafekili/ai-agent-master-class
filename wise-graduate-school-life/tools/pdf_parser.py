@@ -90,7 +90,9 @@ def parse_paper(state: PaperState) -> PaperState:
     if existing:
         sections = get_sections(conn, existing["id"])
         conn.close()
-        print(f"[parse_paper] 캐시 히트 — 기존 논문 사용: {existing['title']} ({len(sections)}개 섹션)")
+        print(
+            f"[parse_paper] 캐시 히트 — 기존 논문 사용: {existing['title']} ({len(sections)}개 섹션)"
+        )
         return {
             "paper_id": existing["id"],
             "paper_title": existing["title"],
