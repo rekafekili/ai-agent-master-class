@@ -1,7 +1,9 @@
-"""marker-pdf 기반 PDF 변환 + 섹션 분리 + Figure/Table 추출 노드."""
+"""PyMuPDF 기반 PDF 변환 + 섹션 분리 + Figure 추출 노드."""
 
 import re
 from pathlib import Path
+
+import fitz  # PyMuPDF
 
 from agent.db import (
     get_connection,
@@ -18,49 +20,116 @@ from agent.state import PaperState
 FIGURES_DIR = Path(__file__).parent.parent / "asset" / "figures"
 
 
-# ── PDF → Markdown 변환 (marker-pdf) ────────────────────
+# ── PDF → Markdown 변환 (PyMuPDF) ───────────────────────
 
 
-def _parse_pdf_to_markdown(file_path: str) -> tuple[str, str, dict]:
-    """marker-pdf로 PDF를 Markdown으로 변환. (title, markdown, images) 반환."""
-    from marker.converters.pdf import PdfConverter
-    from marker.models import create_model_dict
+def _parse_pdf_to_markdown(file_path: str) -> tuple[str, str, list[dict]]:
+    """PyMuPDF로 PDF에서 텍스트와 이미지를 추출. (title, markdown, images) 반환.
 
-    converter = PdfConverter(artifact_dict=create_model_dict())
-    rendered = converter(file_path)
-    markdown = rendered.markdown
-    title = (
-        rendered.metadata.get("title", "")
-        if rendered.metadata
-        else ""
-    )
-    # title이 비어있으면 markdown의 첫 번째 heading 사용
+    PyMuPDF는 AI 모델 없이 텍스트를 추출하므로 heading 구분이 제한적.
+    폰트 크기 기반으로 heading을 추정한다.
+    """
+    doc = fitz.open(file_path)
+    title = doc.metadata.get("title", "").strip() if doc.metadata else ""
+
+    md_lines = []
+    images_info = []
+    fig_count = 0
+
+    for page_num in range(len(doc)):
+        page = doc[page_num]
+
+        # 텍스트 블록 추출 (위치 + 폰트 정보 포함)
+        blocks = page.get_text("dict", flags=fitz.TEXT_PRESERVE_WHITESPACE)["blocks"]
+
+        for block in blocks:
+            # 이미지 블록
+            if block["type"] == 1:
+                fig_count += 1
+                images_info.append({
+                    "page": page_num,
+                    "bbox": block["bbox"],
+                    "index": fig_count,
+                })
+                md_lines.append(f"\n> *[Figure {fig_count}]*\n")
+                continue
+
+            # 텍스트 블록
+            if block["type"] != 0:
+                continue
+
+            for line in block.get("lines", []):
+                spans = line.get("spans", [])
+                if not spans:
+                    continue
+
+                text = "".join(s["text"] for s in spans).strip()
+                if not text:
+                    continue
+
+                # 폰트 크기로 heading 추정
+                max_size = max(s["size"] for s in spans)
+                is_bold = any(
+                    "bold" in s.get("font", "").lower() for s in spans
+                )
+
+                if max_size >= 14 and is_bold:
+                    md_lines.append(f"\n## {text}\n")
+                elif max_size >= 12 and is_bold:
+                    md_lines.append(f"\n### {text}\n")
+                else:
+                    md_lines.append(text)
+
+    doc.close()
+    markdown = "\n".join(md_lines)
+
+    # title이 비어있으면 첫 번째 heading 사용
     if not title:
         match = re.search(r"^#{1,3}\s+(.+)$", markdown, re.MULTILINE)
         title = match.group(1).strip() if match else Path(file_path).stem
 
-    images = rendered.images  # dict[str, PIL.Image]
-    return title, markdown, images
+    return title, markdown, images_info
 
 
-# ── Figure/Table 추출 ────────────────────────────────────
+# ── Figure 추출 ──────────────────────────────────────────
 
 
-def _extract_figures_from_images(images: dict, paper_id: str) -> list[dict]:
-    """marker-pdf의 rendered.images에서 Figure 이미지를 저장."""
+def _extract_figures(file_path: str, images_info: list[dict], paper_id: str) -> list[dict]:
+    """PyMuPDF로 PDF에서 이미지를 추출하여 저장."""
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    doc = fitz.open(file_path)
     items = []
-    for i, (name, pil_img) in enumerate(images.items()):
-        fname = f"{paper_id}_fig_{i + 1}.png"
-        save_path = str(FIGURES_DIR / fname)
-        pil_img.save(save_path)
-        items.append({
-            "item_type": "figure",
-            "label": f"Figure {i + 1}",
-            "caption": name,
-            "image_path": save_path,
-            "table_markdown": None,
-        })
+
+    for img_info in images_info:
+        page = doc[img_info["page"]]
+        fig_idx = img_info["index"]
+
+        # 페이지의 이미지 목록에서 추출
+        image_list = page.get_images(full=True)
+        if image_list:
+            # 첫 번째 매칭 이미지 사용 (간소화)
+            for img_ref in image_list:
+                try:
+                    xref = img_ref[0]
+                    base_image = doc.extract_image(xref)
+                    if base_image:
+                        ext = base_image["ext"]
+                        fname = f"{paper_id}_fig_{fig_idx}.{ext}"
+                        save_path = str(FIGURES_DIR / fname)
+                        with open(save_path, "wb") as f:
+                            f.write(base_image["image"])
+                        items.append({
+                            "item_type": "figure",
+                            "label": f"Figure {fig_idx}",
+                            "caption": "",
+                            "image_path": save_path,
+                            "table_markdown": None,
+                        })
+                        break
+                except Exception:
+                    continue
+
+    doc.close()
     return items
 
 
@@ -88,10 +157,7 @@ def _is_numbered_heading(heading: str) -> bool:
 
 
 def _split_sections_from_markdown(markdown: str) -> tuple[list[dict], str]:
-    """Markdown을 heading 기준으로 섹션 분리하고, References 섹션을 별도 추출.
-
-    논문 초반 저자/기관 정보 섹션은 필터링.
-    """
+    """Markdown을 heading 기준으로 섹션 분리하고, References 섹션을 별도 추출."""
     pattern = r"^(#{1,3})\s+(.+)$"
     lines = markdown.split("\n")
 
@@ -164,7 +230,7 @@ def _split_sections_from_markdown(markdown: str) -> tuple[list[dict], str]:
 def _map_figures_to_sections(
     sections: list[dict], figures_tables: list[dict], markdown: str
 ) -> list[dict]:
-    """Figure/Table을 Markdown 내 위치 기반으로 가장 가까운 섹션에 매핑."""
+    """Figure를 Markdown 내 위치 기반으로 가장 가까운 섹션에 매핑."""
     lines = markdown.split("\n")
 
     section_starts = []
@@ -178,20 +244,16 @@ def _map_figures_to_sections(
             section_starts.append((heading_idx, line_no))
             heading_idx += 1
 
-    for item in figures_tables:
-        search_text = item.get("caption", "") or item.get("label", "")
-        if not search_text:
-            continue
+    # Figure 플레이스홀더 위치로 매핑
+    fig_positions = []
+    for line_no, line in enumerate(lines):
+        if "> *[Figure" in line:
+            fig_positions.append(line_no)
 
-        search_snippet = search_text[:30]
-        item_line = -1
-        for line_no, line in enumerate(lines):
-            if search_snippet in line:
-                item_line = line_no
-                break
-
-        if item_line == -1:
-            continue
+    for idx, item in enumerate(figures_tables):
+        if idx >= len(fig_positions):
+            break
+        item_line = fig_positions[idx]
 
         best_section_idx = 0
         for sec_idx, sec_start_line in section_starts:
@@ -211,7 +273,7 @@ def _map_figures_to_sections(
 
 
 def convert_and_divide(state: PaperState) -> dict:
-    """PDF를 marker-pdf로 변환하고, 섹션 분리 + Figure 추출하는 통합 노드."""
+    """PDF를 PyMuPDF로 변환하고, 섹션 분리 + Figure 추출하는 통합 노드."""
     print("[convert_and_divide] 노드 시작")
     file_path = state["file_path"]
     path = Path(file_path)
@@ -238,17 +300,17 @@ def convert_and_divide(state: PaperState) -> dict:
             "figures_tables": figures_tables,
         }
 
-    # marker-pdf 변환
-    print("[convert_and_divide] marker-pdf 변환 시작...")
-    title, markdown, images = _parse_pdf_to_markdown(str(path))
+    # PyMuPDF 변환
+    print("[convert_and_divide] PyMuPDF 변환 시작...")
+    title, markdown, images_info = _parse_pdf_to_markdown(str(path))
     print(f"[convert_and_divide] 변환 완료: {title}")
 
     # DB에 paper 저장
     paper_id = insert_paper(conn, title, str(path))
 
-    # Figure 추출 (marker-pdf images)
+    # Figure 추출
     print("[convert_and_divide] Figure 추출 중...")
-    figures_tables = _extract_figures_from_images(images, paper_id)
+    figures_tables = _extract_figures(str(path), images_info, paper_id)
     print(f"[convert_and_divide] {len(figures_tables)}개 Figure 추출")
 
     # 섹션 분리
