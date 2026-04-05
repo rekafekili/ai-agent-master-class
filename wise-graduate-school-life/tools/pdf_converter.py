@@ -1,18 +1,7 @@
-"""Docling 기반 PDF 변환 + 섹션 분리 + Figure/Table 추출 노드."""
+"""marker-pdf 기반 PDF 변환 + 섹션 분리 + Figure/Table 추출 노드."""
 
-import os
 import re
 from pathlib import Path
-
-from docling.document_converter import DocumentConverter, PdfFormatOption
-from docling.datamodel.pipeline_options import PdfPipelineOptions
-from docling_core.types.doc.document import (
-    DoclingDocument,
-    PictureItem,
-    TableItem,
-    TextItem,
-)
-from docling_core.types.doc.labels import DocItemLabel
 
 from agent.db import (
     get_connection,
@@ -29,110 +18,53 @@ from agent.state import PaperState
 FIGURES_DIR = Path(__file__).parent.parent / "asset" / "figures"
 
 
-def _extract_title(doc: DoclingDocument) -> str:
-    """문서에서 제목을 추출. TITLE 또는 첫 번째 section_header 사용."""
-    for item, _level in doc.iterate_items():
-        if isinstance(item, TextItem) and item.label in (
-            DocItemLabel.TITLE,
-            DocItemLabel.SECTION_HEADER,
-        ):
-            return item.text.strip()
-    return doc.name or "Untitled"
+# ── PDF → Markdown 변환 (marker-pdf) ────────────────────
 
 
-def _crop_figure_from_pdf(pdf_path: str, page_no: int, bbox, paper_id: str, fig_count: int) -> str | None:
-    """pypdfium2로 PDF 페이지를 렌더링 후 bbox 영역을 크롭하여 이미지로 저장."""
-    try:
-        import pypdfium2 as pdfium
-        FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+def _parse_pdf_to_markdown(file_path: str) -> tuple[str, str, dict]:
+    """marker-pdf로 PDF를 Markdown으로 변환. (title, markdown, images) 반환."""
+    from marker.converters.pdf import PdfConverter
+    from marker.models import create_model_dict
 
-        pdf = pdfium.PdfDocument(pdf_path)
-        page = pdf[page_no - 1]  # 0-indexed
-        scale = 2
-        bitmap = page.render(scale=scale)
-        pil_page = bitmap.to_pil()
+    converter = PdfConverter(artifact_dict=create_model_dict())
+    rendered = converter(file_path)
+    markdown = rendered.markdown
+    title = (
+        rendered.metadata.get("title", "")
+        if rendered.metadata
+        else ""
+    )
+    # title이 비어있으면 markdown의 첫 번째 heading 사용
+    if not title:
+        match = re.search(r"^#{1,3}\s+(.+)$", markdown, re.MULTILINE)
+        title = match.group(1).strip() if match else Path(file_path).stem
 
-        _w, h = pil_page.size
-        # BOTTOMLEFT → PIL top-left 좌표 변환
-        left = int(bbox.l * scale)
-        top = int(h - bbox.t * scale)
-        right = int(bbox.r * scale)
-        bottom = int(h - bbox.b * scale)
-
-        cropped = pil_page.crop((left, top, right, bottom))
-        fname = f"{paper_id}_fig_{fig_count}.png"
-        save_path = str(FIGURES_DIR / fname)
-        cropped.save(save_path)
-        pdf.close()
-        return save_path
-    except Exception:
-        return None
+    images = rendered.images  # dict[str, PIL.Image]
+    return title, markdown, images
 
 
-def _extract_figures_and_tables(
-    doc: DoclingDocument, paper_id: str, pdf_path: str
-) -> list[dict]:
-    """Docling iterate_items로 Figure/Table을 구조화 추출.
+# ── Figure/Table 추출 ────────────────────────────────────
 
-    이미지는 pypdfium2로 PDF에서 직접 크롭하여 저장.
-    """
+
+def _extract_figures_from_images(images: dict, paper_id: str) -> list[dict]:
+    """marker-pdf의 rendered.images에서 Figure 이미지를 저장."""
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
     items = []
-    fig_count = 0
-    tbl_count = 0
-
-    for item, _level in doc.iterate_items():
-        if isinstance(item, PictureItem):
-            fig_count += 1
-            label = f"Figure {fig_count}"
-            caption = ""
-            if item.captions:
-                caption_texts = []
-                for cap_ref in item.captions:
-                    resolved = cap_ref.resolve(doc=doc)
-                    if resolved and hasattr(resolved, "text"):
-                        caption_texts.append(resolved.text)
-                caption = " ".join(caption_texts)
-
-            # pypdfium2로 bbox 크롭
-            image_path = None
-            if item.prov:
-                prov = item.prov[0]
-                image_path = _crop_figure_from_pdf(
-                    pdf_path, prov.page_no, prov.bbox, paper_id, fig_count
-                )
-
-            items.append({
-                "item_type": "figure",
-                "label": label,
-                "caption": caption,
-                "image_path": image_path,
-                "table_markdown": None,
-            })
-
-        elif isinstance(item, TableItem):
-            tbl_count += 1
-            label = f"Table {tbl_count}"
-            caption = ""
-            if hasattr(item, "captions") and item.captions:
-                caption_texts = []
-                for cap_ref in item.captions:
-                    resolved = cap_ref.resolve(doc=doc)
-                    if resolved and hasattr(resolved, "text"):
-                        caption_texts.append(resolved.text)
-                caption = " ".join(caption_texts)
-
-            table_md = item.export_to_markdown(doc=doc)
-
-            items.append({
-                "item_type": "table",
-                "label": label,
-                "caption": caption,
-                "image_path": None,
-                "table_markdown": table_md,
-            })
-
+    for i, (name, pil_img) in enumerate(images.items()):
+        fname = f"{paper_id}_fig_{i + 1}.png"
+        save_path = str(FIGURES_DIR / fname)
+        pil_img.save(save_path)
+        items.append({
+            "item_type": "figure",
+            "label": f"Figure {i + 1}",
+            "caption": name,
+            "image_path": save_path,
+            "table_markdown": None,
+        })
     return items
+
+
+# ── 섹션 분리 + 필터링 ──────────────────────────────────
 
 
 _SKIP_SECTION_KEYWORDS = {"@", "university", "institute", "department", "college",
@@ -173,7 +105,6 @@ def _split_sections_from_markdown(markdown: str) -> tuple[list[dict], str]:
     for line in lines:
         match = re.match(pattern, line)
         if match:
-            # 이전 섹션 저장
             if current_lines:
                 content = "\n".join(current_lines).strip()
                 if content:
@@ -191,14 +122,12 @@ def _split_sections_from_markdown(markdown: str) -> tuple[list[dict], str]:
             current_level = len(match.group(1))
             current_lines = []
 
-            # References 섹션 감지
             heading_lower = current_heading.lower()
             if heading_lower in ("references", "bibliography", "reference"):
                 in_references = True
         else:
             current_lines.append(line)
 
-    # 마지막 섹션 처리
     if current_lines:
         content = "\n".join(current_lines).strip()
         if content:
@@ -212,8 +141,6 @@ def _split_sections_from_markdown(markdown: str) -> tuple[list[dict], str]:
                 })
 
     # 저자/기관/메타 섹션 필터링
-    # 본문 시작 = 첫 번째 번호 heading (예: "1 INTRODUCTION")
-    # 그 전의 섹션 중 Abstract만 유지하고 나머지 메타 섹션은 제거
     sections = []
     body_started = False
     for s in raw_sections:
@@ -240,7 +167,6 @@ def _map_figures_to_sections(
     """Figure/Table을 Markdown 내 위치 기반으로 가장 가까운 섹션에 매핑."""
     lines = markdown.split("\n")
 
-    # 각 섹션의 시작 라인 번호 찾기
     section_starts = []
     heading_pattern = r"^(#{1,3})\s+(.+)$"
     heading_idx = 0
@@ -252,13 +178,11 @@ def _map_figures_to_sections(
             section_starts.append((heading_idx, line_no))
             heading_idx += 1
 
-    # 각 figure/table의 위치를 markdown에서 찾아서 섹션에 매핑
     for item in figures_tables:
         search_text = item.get("caption", "") or item.get("label", "")
         if not search_text:
             continue
 
-        # 캡션 텍스트의 처음 30자로 위치 탐색
         search_snippet = search_text[:30]
         item_line = -1
         for line_no, line in enumerate(lines):
@@ -269,7 +193,6 @@ def _map_figures_to_sections(
         if item_line == -1:
             continue
 
-        # 가장 가까운 이전 섹션에 매핑
         best_section_idx = 0
         for sec_idx, sec_start_line in section_starts:
             if sec_start_line <= item_line:
@@ -284,8 +207,11 @@ def _map_figures_to_sections(
     return figures_tables
 
 
+# ── 메인 노드 ───────────────────────────────────────────
+
+
 def convert_and_divide(state: PaperState) -> dict:
-    """PDF를 Docling으로 변환하고, 섹션 분리 + Figure/Table 추출하는 통합 노드."""
+    """PDF를 marker-pdf로 변환하고, 섹션 분리 + Figure 추출하는 통합 노드."""
     print("[convert_and_divide] 노드 시작")
     file_path = state["file_path"]
     path = Path(file_path)
@@ -312,42 +238,24 @@ def convert_and_divide(state: PaperState) -> dict:
             "figures_tables": figures_tables,
         }
 
-    # Docling 변환
-    print("[convert_and_divide] Docling 변환 시작...")
-    converter = DocumentConverter()
-    result = converter.convert(str(path))
-    doc = result.document
-    print("[convert_and_divide] Docling 변환 완료")
-
-    # 제목 추출
-    title = _extract_title(doc)
-    print(f"[convert_and_divide] 제목: {title}")
+    # marker-pdf 변환
+    print("[convert_and_divide] marker-pdf 변환 시작...")
+    title, markdown, images = _parse_pdf_to_markdown(str(path))
+    print(f"[convert_and_divide] 변환 완료: {title}")
 
     # DB에 paper 저장
     paper_id = insert_paper(conn, title, str(path))
 
-    # Figure/Table 추출
-    print("[convert_and_divide] Figure/Table 추출 중...")
-    figures_tables = _extract_figures_and_tables(doc, paper_id, str(path))
-    print(f"[convert_and_divide] {len(figures_tables)}개 Figure/Table 추출")
+    # Figure 추출 (marker-pdf images)
+    print("[convert_and_divide] Figure 추출 중...")
+    figures_tables = _extract_figures_from_images(images, paper_id)
+    print(f"[convert_and_divide] {len(figures_tables)}개 Figure 추출")
 
-    # Markdown export → 섹션 분리
-    markdown = doc.export_to_markdown()
-    # HTML 코멘트를 보이는 텍스트로 변환
-    markdown = markdown.replace("<!-- image -->", "> *[Figure]*\n")
-    markdown = re.sub(
-        r"<!-- 🖼️❌.*?-->",
-        "> *[Figure]*\n",
-        markdown,
-    )
-    markdown = markdown.replace(
-        "<!-- formula-not-decoded -->",
-        "*[수식]*",
-    )
+    # 섹션 분리
     sections, references_raw = _split_sections_from_markdown(markdown)
     print(f"[convert_and_divide] {len(sections)}개 섹션 분리, References {'있음' if references_raw else '없음'}")
 
-    # Figure/Table → 섹션 매핑
+    # Figure → 섹션 매핑
     figures_tables = _map_figures_to_sections(sections, figures_tables, markdown)
 
     # DB 저장
