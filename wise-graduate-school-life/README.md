@@ -14,7 +14,7 @@
 | --------------- | -------------------------------------- |
 | 워크플로우 엔진 | LangGraph (Send API 병렬 처리)         |
 | LLM             | OpenAI GPT-4o-mini (Structured Output) |
-| PDF 파싱        | Docling (IBM)                          |
+| PDF 파싱        | PyMuPDF                                |
 | UI              | Streamlit (wide layout)                |
 | DB              | SQLite                                 |
 | 패키지 관리     | uv                                     |
@@ -23,7 +23,7 @@
 
 ```mermaid
 flowchart TB
-    Upload["논문 PDF 업로드"] --> ConvertDivide["PDF to Markdown (Docling)"]
+    Upload["논문 PDF 업로드"] --> ConvertDivide["PDF to Markdown (PyMuPDF)"]
     ConvertDivide --> DividePaper
 
     subgraph DividePaper["DividePaper"]
@@ -78,14 +78,21 @@ START → convert_and_divide → route_to_subgraphs (Send API 병렬):
 
 ## 5. 핵심 기능
 
-### PDF 파싱 (Docling)
+### PDF 파싱 (PyMuPDF)
 
-- PDF를 Markdown으로 변환
+- PDF를 Markdown으로 변환 (폰트 크기 기반 heading 추정)
 - heading 기준 섹션 분리
-- Figure/Table 구조화 추출 (pypdfium2 bbox 크롭)
+- Figure 이미지 추출
 - 참고문헌 섹션 별도 분리
 - 논문 초반 저자/기관/메타 정보 자동 필터링
-- **BUT. 아직 이미지와 수식 추출은 미흡한 상태**
+
+> **PDF 파서 변경 이력**
+>
+> | 파서 | 시도 결과 |
+> |------|----------|
+> | Docling (IBM) | 레이아웃 분석 우수하나, Streamlit Cloud에서 HuggingFace 모델 다운로드 실패 (`LocalEntryNotFoundError`) |
+> | marker-pdf | 변환 품질 좋으나, 1.35GB AI 모델 로딩으로 Streamlit Cloud 무료 티어(RAM 1GB)에서 메모리 부족 |
+> | **PyMuPDF** | AI 모델 없이 순수 C 라이브러리로 동작. 경량 + 빠름. Streamlit Cloud 호환. heading 추정은 폰트 크기 기반으로 제한적이지만 실용적 |
 
 ### VocaManager (단어장)
 
@@ -112,6 +119,7 @@ START → convert_and_divide → route_to_subgraphs (Send API 병렬):
 - PDF 업로드 후 업로드 필드 자동 숨김
 - 파싱 진행 상황 표시
 - 3컬럼 실시간 진행 (VocaManager / TutorAgent / ReferenceHunter)
+- 이전에 분석한 논문 목록 표시 → 클릭 시 DB에서 로드하여 바로 결과 페이지로 이동
 
 ### 결과 페이지 (섹션별 카드 네비게이션)
 
@@ -155,7 +163,7 @@ wise-graduate-school-life/
 │   ├── db.py                 # SQLite CRUD (6개 테이블)
 │   └── prompts.py            # LLM 프롬프트 (요약/키워드)
 ├── tools/
-│   ├── pdf_converter.py      # Docling PDF 변환 + 섹션 분리
+│   ├── pdf_converter.py      # PyMuPDF PDF 변환 + 섹션 분리
 │   ├── vocabulary.py         # VocaManager 서브그래프
 │   ├── tutor.py              # TutorAgent 서브그래프
 │   └── reference_hunter.py   # ReferenceHunter 서브그래프

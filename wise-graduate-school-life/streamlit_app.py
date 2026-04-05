@@ -7,6 +7,14 @@ import re
 
 import streamlit as st
 
+from agent.db import (
+    get_connection,
+    init_db,
+    get_sections,
+    get_summaries,
+    get_vocabulary,
+    get_reference_links,
+)
 from agent.main_agent import graph
 
 st.set_page_config(page_title="슬기로운 대학원 생활", page_icon="📚", layout="wide")
@@ -288,3 +296,38 @@ else:
         st.session_state.current_section = 0
         st.session_state.analysis_done = True
         st.rerun()
+
+    # ── 이전에 분석한 논문 목록 ──
+    conn = get_connection()
+    init_db(conn)
+    papers = conn.execute(
+        "SELECT id, title, created_at FROM papers ORDER BY created_at DESC"
+    ).fetchall()
+    conn.close()
+
+    if papers:
+        st.divider()
+        st.markdown("#### 이전에 분석한 논문")
+        for paper in papers:
+            paper_id = paper["id"]
+            paper_title = paper["title"]
+            created = paper["created_at"][:10] if paper["created_at"] else ""
+            col_title, col_btn = st.columns([5, 1])
+            with col_title:
+                st.markdown(f"📄 **{paper_title}** &nbsp; `{created}`")
+            with col_btn:
+                if st.button("보기", key=f"view_{paper_id}", use_container_width=True):
+                    db_conn = get_connection()
+                    init_db(db_conn)
+                    st.session_state.result = {
+                        "paper_title": paper_title,
+                        "sections": get_sections(db_conn, paper_id),
+                        "figures_tables": [],
+                        "vocabulary": get_vocabulary(db_conn, paper_id),
+                        "summaries": get_summaries(db_conn, paper_id),
+                        "references": get_reference_links(db_conn, paper_id),
+                    }
+                    db_conn.close()
+                    st.session_state.current_section = 0
+                    st.session_state.analysis_done = True
+                    st.rerun()
