@@ -1,7 +1,3 @@
-from dotenv import load_dotenv
-
-load_dotenv()
-
 from langgraph.graph import StateGraph, START, END
 from langgraph.types import Send
 
@@ -24,19 +20,23 @@ from tools.reference_hunter import reference_graph
 
 def run_voca_manager(state: dict) -> dict:
     """VocaManager 서브그래프를 실행하고 vocabulary를 메인 State에 반환."""
-    result = voca_graph.invoke({
-        "paper_id": state["paper_id"],
-        "section": state["section"],
-    })
+    result = voca_graph.invoke(
+        {
+            "paper_id": state["paper_id"],
+            "section": state["section"],
+        }
+    )
     return {"vocabulary": result.get("vocabulary", [])}
 
 
 def run_tutor_agent(state: dict) -> dict:
     """TutorAgent 서브그래프를 실행하고 summaries를 메인 State에 반환."""
-    result = tutor_graph.invoke({
-        "paper_id": state["paper_id"],
-        "section": state["section"],
-    })
+    result = tutor_graph.invoke(
+        {
+            "paper_id": state["paper_id"],
+            "section": state["section"],
+        }
+    )
     return {
         "summaries": [
             {
@@ -53,10 +53,12 @@ def run_tutor_agent(state: dict) -> dict:
 
 def run_reference_hunter(state: dict) -> dict:
     """ReferenceHunter 서브그래프를 실행하고 reference_links를 메인 State에 반환."""
-    result = reference_graph.invoke({
-        "paper_id": state["paper_id"],
-        "references_raw": state["references_raw"],
-    })
+    result = reference_graph.invoke(
+        {
+            "paper_id": state["paper_id"],
+            "references_raw": state["references_raw"],
+        }
+    )
     return {"reference_links": result.get("reference_links", [])}
 
 
@@ -69,24 +71,33 @@ def route_to_subgraphs(state: PaperState) -> list[Send]:
 
     for section in state["sections"]:
         sends.append(
-            Send("run_voca_manager", {
-                "paper_id": state["paper_id"],
-                "section": section,
-            })
+            Send(
+                "run_voca_manager",
+                {
+                    "paper_id": state["paper_id"],
+                    "section": section,
+                },
+            )
         )
         sends.append(
-            Send("run_tutor_agent", {
-                "paper_id": state["paper_id"],
-                "section": section,
-            })
+            Send(
+                "run_tutor_agent",
+                {
+                    "paper_id": state["paper_id"],
+                    "section": section,
+                },
+            )
         )
 
     if state.get("references_raw"):
         sends.append(
-            Send("run_reference_hunter", {
-                "paper_id": state["paper_id"],
-                "references_raw": state["references_raw"],
-            })
+            Send(
+                "run_reference_hunter",
+                {
+                    "paper_id": state["paper_id"],
+                    "references_raw": state["references_raw"],
+                },
+            )
         )
 
     return sends
