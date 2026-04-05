@@ -15,6 +15,7 @@ dependencies = [
     "streamlit>=1.30.0",
     "mineru[all]>=3.0.8",
     "docling>=2.84.0",
+    "marker-pdf",
 ]
 
 [dependency-groups]
