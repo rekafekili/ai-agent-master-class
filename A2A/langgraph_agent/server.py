@@ -57,4 +57,14 @@ async def handle_message(req: Request):
 
     response = run_graph(message_text)
 
-    return {"message": response}
+    # https://a2a-protocol.org/latest/sdk/python/api/a2a.types.html#a2a.types.SendMessageSuccessResponse
+    return {
+        "id": "message_1",
+        "jsonrpc": "2.0",
+        "result": {
+            "kind": "message",
+            "message_id": "092834091273904701234",
+            "role": "agent",
+            "parts": [{"kind": "text", "text": response}],
+        },
+    }
